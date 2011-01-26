@@ -1,5 +1,8 @@
 package es.libresoft.openhealth.android.test.client;
 
+import es.libresoft.openhealth.android.IAgent;
+import es.libresoft.openhealth.android.IManagerClientCallback;
+import es.libresoft.openhealth.android.IManagerService;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,16 +10,46 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 public class ManagerTestClient extends Activity {
 
 	private boolean isBound = false;
 	private static String serviceName = new String("es.libresoft.openhealth.android.OPENHEALTH_SERVICE");
+	private IManagerService managerService;
+
+	private IManagerClientCallback msc = new IManagerClientCallback() {
+
+		@Override
+		public void agentConnected(IAgent agent) throws RemoteException {
+			System.out.println("TODO: Implement agent connected");
+		}
+
+		@Override
+		public void agentDisconnected(IAgent agent) throws RemoteException {
+			System.out.println("TODO: Implement agent disconnected");
+		}
+
+		@Override
+		public IBinder asBinder() {
+			System.out.println("TODO: Implement agent asBinder");
+			return null;
+		}
+
+	};
+
 	private ServiceConnection healthConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			System.err.println("TODO: Service connected " + name);
+			managerService = IManagerService.Stub.asInterface(service);
+
+			try {
+				managerService.registerApplication(msc);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 		@Override
