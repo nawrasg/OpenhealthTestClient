@@ -42,11 +42,17 @@ public class ManagerTestClient extends Activity {
 		}
 	}
 
+	private void doStartService() {
+		Intent intentDroid = new Intent(serviceName);
+		startService(intentDroid);
+	}
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		doStartService();
 		doBindService();
 	}
 
