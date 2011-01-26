@@ -10,8 +10,9 @@ import android.os.IBinder;
 
 public class ManagerTestClient extends Activity {
 
+	private boolean isBound = false;
 	private static String serviceName = new String("es.libresoft.openhealth.android.OPENHEALTH_SERVICE");
-	private ServiceConnection managerService = new ServiceConnection(){
+	private ServiceConnection healthConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
@@ -24,12 +25,21 @@ public class ManagerTestClient extends Activity {
 		}
 	};
 
-	public boolean initManager() {
+	void doBindService() {
+		// Establish a connection with the service.  We use an explicit
+		// class name because we want a specific service implementation that
+		// we know will be running in our own process (and thus won't be
+		// supporting component replacement by other applications).
+		bindService(new Intent(serviceName), healthConnection, Context.BIND_AUTO_CREATE);
+		isBound = true;
+	}
 
-		bindService(new Intent(serviceName), managerService, Context.BIND_AUTO_CREATE);
-
-		System.err.println("Service launched");
-		return true;
+	void doUnbindService() {
+		if (isBound) {
+			// Detach our existing connection.
+			unbindService(healthConnection);
+			isBound = false;
+		}
 	}
 
 	/** Called when the activity is first created. */
@@ -37,7 +47,12 @@ public class ManagerTestClient extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		doBindService();
+	}
 
-		initManager();
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		doUnbindService();
 	}
 }
