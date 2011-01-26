@@ -16,7 +16,7 @@ public class ManagerTestClient extends Activity {
 
 	private boolean isBound = false;
 	private static String serviceName = new String("es.libresoft.openhealth.android.OPENHEALTH_SERVICE");
-	private IManagerService managerService;
+	private IManagerService managerService = null;
 
 	private IManagerClientCallback msc = new IManagerClientCallback() {
 
@@ -50,11 +50,14 @@ public class ManagerTestClient extends Activity {
 				e.printStackTrace();
 			}
 
+			isBound = true;
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			System.err.println("TODO: Service disconnected " + name);
+			System.err.println("Service disconnected ");
+			managerService = null;
+			isBound = false;
 		}
 	};
 
@@ -63,8 +66,8 @@ public class ManagerTestClient extends Activity {
 		// class name because we want a specific service implementation that
 		// we know will be running in our own process (and thus won't be
 		// supporting component replacement by other applications).
-		bindService(new Intent(serviceName), healthConnection, Context.BIND_AUTO_CREATE);
-		isBound = true;
+		//bindService(new Intent(serviceName), healthConnection, Context.BIND_AUTO_CREATE);
+		bindService(new Intent(IManagerService.class.getName()), healthConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	void doUnbindService() {
@@ -92,6 +95,13 @@ public class ManagerTestClient extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (managerService != null && isBound) {
+			try {
+				managerService.unregisterApplication(msc);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 		doUnbindService();
 	}
 }
