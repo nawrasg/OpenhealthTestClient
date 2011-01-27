@@ -18,7 +18,7 @@ public class ManagerTestClient extends Activity {
 	private static String serviceName = new String("es.libresoft.openhealth.android.OPENHEALTH_SERVICE");
 	private IManagerService managerService = null;
 
-	private IManagerClientCallback msc = new IManagerClientCallback() {
+	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
 
 		@Override
 		public void agentPlugged(IAgent agent) throws RemoteException {
@@ -28,12 +28,6 @@ public class ManagerTestClient extends Activity {
 		@Override
 		public void agentUnplugged(IAgent agent) throws RemoteException {
 			System.out.println("TODO: Implement agentUnplugged");
-		}
-
-		@Override
-		public IBinder asBinder() {
-			System.out.println("TODO: Implement agent asBinder");
-			return null;
 		}
 
 	};
