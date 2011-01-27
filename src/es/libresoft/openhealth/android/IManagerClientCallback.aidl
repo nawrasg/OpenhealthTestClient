@@ -30,12 +30,12 @@ import es.libresoft.openhealth.android.IAgent;
 
 oneway interface IManagerClientCallback {
 	/**
-	 * Called when agent connect with the manager.
+	 * Called when agent is available for to connect with the manager.
 	 */
-	void agentConnected(in IAgent agent);
+	void agentPlugged(in IAgent agent);
 
 	/**
 	 * Called when agent releases the association with the manager.
 	 */
-	void agentDisconnected(in IAgent agent);
+	void agentUnplugged(in IAgent agent);
 }

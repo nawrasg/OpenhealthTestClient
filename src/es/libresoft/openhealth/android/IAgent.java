@@ -4,8 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class IAgent implements Parcelable {
-	private int phdid;
-	private String systId;
+	private int id;
 
 	public static final Parcelable.Creator<IAgent> CREATOR =
 			new Parcelable.Creator<IAgent>() {
@@ -19,8 +18,7 @@ public class IAgent implements Parcelable {
 	};
 
 	private IAgent (Parcel in) {
-		phdid = in.readInt();
-		systId = in.readString();
+		id = in.readInt();
 	}
 
 	@Override
@@ -30,13 +28,11 @@ public class IAgent implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(phdid);
-		dest.writeString(systId);
+		dest.writeInt(id);
 	}
 
-	public IAgent (int id, String systId, String manufacturer, String modelNumber) {
-		this.phdid = id;
-		this.systId = systId;
+	public IAgent (int id) {
+		this.id = id;
 	}
 
 	public boolean equals(Object o) {
@@ -44,9 +40,6 @@ public class IAgent implements Parcelable {
 			return false;
 
 		IAgent agent = (IAgent) o;
-		if (this.phdid != agent.phdid)
-			return false;
-
-		return this.systId.equalsIgnoreCase(agent.systId);
+		return this.id == agent.id;
 	}
 }

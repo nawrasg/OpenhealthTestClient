@@ -21,13 +21,13 @@ public class ManagerTestClient extends Activity {
 	private IManagerClientCallback msc = new IManagerClientCallback() {
 
 		@Override
-		public void agentConnected(IAgent agent) throws RemoteException {
-			System.out.println("TODO: Implement agent connected");
+		public void agentPlugged(IAgent agent) throws RemoteException {
+			System.out.println("TODO: Implement agentPlugged");
 		}
 
 		@Override
-		public void agentDisconnected(IAgent agent) throws RemoteException {
-			System.out.println("TODO: Implement agent disconnected");
+		public void agentUnplugged(IAgent agent) throws RemoteException {
+			System.out.println("TODO: Implement agentUnplugged");
 		}
 
 		@Override
