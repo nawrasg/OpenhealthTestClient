@@ -43,6 +43,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -57,6 +58,23 @@ public class ManagerTestClient extends ListActivity {
 
 	static class ListContent {
 		TextView text;
+	}
+
+	private class ItemClickListener implements OnClickListener {
+
+		private IAgent agent;
+
+		public ItemClickListener(IAgent agent) {
+			this.agent = agent;
+		}
+
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent (ManagerTestClient.this,AgentView.class);
+			intent.putExtra("agent", agent);
+			startActivity(intent);
+		}
+
 	}
 
 	private BaseAdapter adapter = new BaseAdapter() {
@@ -80,7 +98,11 @@ public class ManagerTestClient extends ListActivity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			TextView tv = new TextView(ManagerTestClient.this);
-			tv.setText(agents.get(position).toString());
+			IAgent agent = agents.get(position);
+			OnClickListener ocl = new ItemClickListener(agent);
+
+			tv.setOnClickListener(ocl);
+			tv.setText(agent.toString());
 			return tv;
 		}
 	};
