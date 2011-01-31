@@ -1,33 +1,103 @@
+/*
+Copyright (C) 2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
+
+Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
+Author: Santiago Carot-Nemesio <scarot@libresoft.es>
+Author: Bartolomé Marin Sanchez <zedd@libresoft.es>
+
+This program is a (FLOS) free libre and open source implementation
+of a multiplatform manager device written in java according to the
+ISO/IEEE 11073-20601. Manager application is designed to work in
+DalvikVM over android platform.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 package es.libresoft.openhealth.android.test.client;
+
+import java.util.Vector;
 
 import es.libresoft.openhealth.android.IAgent;
 import es.libresoft.openhealth.android.IManagerClientCallback;
 import es.libresoft.openhealth.android.IManagerService;
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-public class ManagerTestClient extends Activity {
+public class ManagerTestClient extends ListActivity {
 
 	private boolean isBound = false;
 	private static String serviceName = new String("es.libresoft.openhealth.android.OPENHEALTH_SERVICE");
 	private IManagerService managerService = null;
+	private Vector<IAgent> agents = new Vector<IAgent>();
+
+	private Handler handler = new Handler();
+
+	static class ListContent {
+		TextView text;
+	}
+
+	private BaseAdapter adapter = new BaseAdapter() {
+
+		@Override
+		public int getCount() {
+			return agents.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return agents.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			TextView tv = new TextView(ManagerTestClient.this);
+			tv.setText(agents.get(position).toString());
+			return tv;
+		}
+	};
+
 
 	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
 
 		@Override
 		public void agentPlugged(IAgent agent) throws RemoteException {
-			System.out.println("TODO: Implement agentPlugged");
+			agents.add(agent);
+			handler.post(doUpdateGUI);
 		}
 
 		@Override
 		public void agentUnplugged(IAgent agent) throws RemoteException {
-			System.out.println("TODO: Implement agentUnplugged");
+			agents.removeElement(agent);
+			handler.post(doUpdateGUI);
 		}
 
 	};
@@ -40,6 +110,8 @@ public class ManagerTestClient extends Activity {
 
 			try {
 				managerService.registerApplication(msc);
+				managerService.agents(agents);
+				handler.post(doUpdateGUI);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -52,6 +124,12 @@ public class ManagerTestClient extends Activity {
 			System.err.println("Service disconnected ");
 			managerService = null;
 			isBound = false;
+		}
+	};
+
+	private Runnable doUpdateGUI = new Runnable(){
+		public void run(){
+			updateGUI();
 		}
 	};
 
@@ -97,5 +175,9 @@ public class ManagerTestClient extends Activity {
 			}
 		}
 		doUnbindService();
+	}
+
+	private void updateGUI() {
+		this.setListAdapter(adapter);
 	}
 }
