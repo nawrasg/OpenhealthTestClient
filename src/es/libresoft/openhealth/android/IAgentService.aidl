@@ -30,5 +30,7 @@ import es.libresoft.openhealth.android.types.IAttribute;
 
 interface IAgentService {
 	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr);
+	boolean updateMDS(in IAgent agent);
+
 	void connect(in IAgent agent);
 }

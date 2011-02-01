@@ -35,6 +35,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -56,12 +57,32 @@ public class AgentView extends Activity {
 			agentService = IAgentService.Stub.asInterface(service);
 
 			try {
+				AsyncTask<IAgent, Integer, Boolean> at = new AsyncTask<IAgent, Integer, Boolean>() {
+					protected Boolean doInBackground(IAgent... agent) {
+						try {
+							return agentService.updateMDS(agent[0]);
+						} catch (RemoteException e) {
+							return false;
+						}
+					}
+
+					protected void onPostExecute(Boolean result) {
+						System.err.println("MDS updated: " + result);
+					}
+				};
+				at.execute(agent);
+
+				/*
 				agentService.getAttribute(agent, 2337, agentHandle);
+				System.out.println("attribute = " + agentHandle);
 				IHANDLE h = (IHANDLE) agentHandle.getAttr();
+				System.out.println("handle = " + h);
 				System.out.println("Handle = " + h.getHandle());
 				// TODO: Set correct nomenclature code here to avoid magic numbers
 			} catch (RemoteException e) {
 				e.printStackTrace();
+			}
+				*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
