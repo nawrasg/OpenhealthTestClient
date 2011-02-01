@@ -62,7 +62,8 @@ public class IAttribute implements Parcelable {
 	}
 
 	public void readFromParcel(Parcel in) {
-		attr = in.readParcelable(null);
+		java.lang.ClassLoader cl = (java.lang.ClassLoader)this.getClass().getClassLoader();
+		attr = in.readParcelable(cl);
 	}
 
 	public IAttribute (Parcelable attr) {
