@@ -12,6 +12,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AgentView" />
+        <activity android:name=".AgentAttributeView" />
 
     </application>
     <uses-sdk android:minSdkVersion="8" />

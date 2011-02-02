@@ -26,9 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
-import es.libresoft.openhealth.android.aidl.IAgent;
-import es.libresoft.openhealth.android.aidl.IAgentService;
-import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -38,15 +35,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+import es.libresoft.openhealth.android.aidl.IAgent;
+import es.libresoft.openhealth.android.aidl.IAgentService;
+//import es.libresoft.openhealth.android.aidl.types.IAttribute;
 
 public class AgentView extends Activity {
 
 	private IAgent agent;
 	private IAgentService agentService = null;
 	private boolean isBound = false;
-	private IAttribute agentHandle = new IAttribute();
+//	private IAttribute agentHandle = new IAttribute();
 
 	private ServiceConnection agentConnection = new ServiceConnection() {
 
@@ -54,24 +58,11 @@ public class AgentView extends Activity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 
 			agentService = IAgentService.Stub.asInterface(service);
+			isBound = true;
 
-			try {
-				AsyncTask<IAgent, Integer, Boolean> at = new AsyncTask<IAgent, Integer, Boolean>() {
-					protected Boolean doInBackground(IAgent... agent) {
-						try {
-							return agentService.updateMDS(agent[0]);
-						} catch (RemoteException e) {
-							return false;
-						}
-					}
-
-					protected void onPostExecute(Boolean result) {
-						System.err.println("MDS updated: " + result);
-					}
-				};
-				at.execute(agent);
-
-				/*
+			/*
+			try
+			{
 				agentService.getAttribute(agent, 2337, agentHandle);
 				System.out.println("attribute = " + agentHandle);
 				IHANDLE h = (IHANDLE) agentHandle.getAttr();
@@ -81,11 +72,7 @@ public class AgentView extends Activity {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-				*/
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			isBound = true;
+			 */
 		}
 
 		@Override
@@ -129,5 +116,50 @@ public class AgentView extends Activity {
 		}
 
 		super.onDestroy();
+	}
+	
+	private void updateMDS() {
+		try {
+			AsyncTask<IAgent, Integer, Boolean> at = new AsyncTask<IAgent, Integer, Boolean>() {
+				protected Boolean doInBackground(IAgent... agent) {
+					try {
+						return agentService.updateMDS(agent[0]);
+					} catch (RemoteException e) {
+						return false;
+					}
+				}
+
+				protected void onPostExecute(Boolean result) {
+					Toast toast = Toast.makeText(getApplicationContext(), "MDS updated: " +  result, Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
+			};
+			at.execute(agent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.agentviewmenu, menu);
+	    return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected (MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.MENU_UPDATEMDS:
+				updateMDS();
+				break;
+			case R.id.MENU_ATTRIBUTES:
+				Intent intent = new Intent (AgentView.this,AgentAttributeView.class);
+				startActivity(intent);
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
