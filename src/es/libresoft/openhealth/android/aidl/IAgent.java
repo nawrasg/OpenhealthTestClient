@@ -73,5 +73,9 @@ public class IAgent implements Parcelable {
 
 		return false;
 	}
+
+	public int getId() {
+		return id;
+	}
 }
 

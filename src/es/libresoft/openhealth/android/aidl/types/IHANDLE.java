@@ -51,6 +51,10 @@ public class IHANDLE implements Parcelable {
 
 	}
 
+	public IHANDLE (int handle) {
+		this.handle = handle;
+	}
+
 	private IHANDLE (Parcel in) {
 		handle = in.readInt();
 	}
