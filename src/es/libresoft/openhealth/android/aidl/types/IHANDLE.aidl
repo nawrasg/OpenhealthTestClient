@@ -2,7 +2,7 @@
 Copyright (C) 2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
-Author: Santiago Carot Nemesio <scarot@libresoft.es>
+Author: Santiago Carot-Nemesio <scarot@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -24,13 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android;
-import es.libresoft.openhealth.android.IAgent;
-import es.libresoft.openhealth.android.types.IAttribute;
+package es.libresoft.openhealth.android.aidl.types;
 
-interface IAgentService {
-	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr);
-	boolean updateMDS(in IAgent agent);
-
-	void connect(in IAgent agent);
-}
+parcelable IHANDLE;

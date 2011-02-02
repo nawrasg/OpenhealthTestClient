@@ -24,9 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android;
+package es.libresoft.openhealth.android.aidl.types;
 
-// Declare the value measure so AIDL can find it and knows that it implements
-// the parcelable protocol.
-
-parcelable IAgent;
+parcelable IAttribute;

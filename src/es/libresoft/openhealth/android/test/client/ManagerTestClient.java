@@ -29,9 +29,10 @@ package es.libresoft.openhealth.android.test.client;
 
 import java.util.Vector;
 
-import es.libresoft.openhealth.android.IAgent;
-import es.libresoft.openhealth.android.IManagerClientCallback;
-import es.libresoft.openhealth.android.IManagerService;
+import es.libresoft.openhealth.android.aidl.IAgent;
+import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
+import es.libresoft.openhealth.android.aidl.IManagerService;
+
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;

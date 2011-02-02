@@ -2,7 +2,7 @@
 Copyright (C) 2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
-Author: Santiago Carot Nemesio <scarot@libresoft.es>
+Author: Santiago Carot-Nemesio <scarot@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -24,31 +24,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.types;
+package es.libresoft.openhealth.android.aidl.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IAttribute implements Parcelable {
-	private Parcelable attr;
+public class IHANDLE implements Parcelable {
+	private int handle;
 
-	public static final Parcelable.Creator<IAttribute> CREATOR =
-			new Parcelable.Creator<IAttribute>() {
-		public IAttribute createFromParcel(Parcel in) {
-			return new IAttribute(in);
+	public int getHandle() {
+		return handle;
+	}
+
+	public static final Parcelable.Creator<IHANDLE> CREATOR =
+			new Parcelable.Creator<IHANDLE>() {
+		public IHANDLE createFromParcel(Parcel in) {
+			return new IHANDLE(in);
 		}
 
-		public IAttribute[] newArray(int size) {
-			return new IAttribute[size];
+		public IHANDLE[] newArray(int size) {
+			return new IHANDLE[size];
 		}
 	};
 
-	public IAttribute () {
+	public IHANDLE () {
 
 	}
 
-	private IAttribute (Parcel in) {
-		in.readParcelable(null);
+	private IHANDLE (Parcel in) {
+		handle = in.readInt();
 	}
 
 	@Override
@@ -58,28 +62,14 @@ public class IAttribute implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeParcelable(attr, 0);
-	}
-
-	public void readFromParcel(Parcel in) {
-		java.lang.ClassLoader cl = (java.lang.ClassLoader)this.getClass().getClassLoader();
-		attr = in.readParcelable(cl);
-	}
-
-	public IAttribute (Parcelable attr) {
-		this.attr = attr;
+		dest.writeInt(handle);
 	}
 
 	public boolean equals(Object o) {
-		return attr.equals(o);
-	}
+		if (!(o instanceof IHANDLE))
+			return false;
 
-	public Parcelable getAttr() {
-		return attr;
+		IHANDLE agent = (IHANDLE) o;
+		return this.handle == agent.handle;
 	}
-
-	public void setAttr(Parcelable attr) {
-		this.attr = attr;
-	}
-
 }

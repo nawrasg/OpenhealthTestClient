@@ -24,6 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.types;
+package es.libresoft.openhealth.android.aidl;
 
-parcelable IAttribute;
+import es.libresoft.openhealth.android.aidl.IAgent;
+import es.libresoft.openhealth.android.aidl.types.IAttribute;
+
+interface IAgentService {
+	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr);
+	boolean updateMDS(in IAgent agent);
+
+	void connect(in IAgent agent);
+}

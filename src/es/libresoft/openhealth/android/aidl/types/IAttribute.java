@@ -24,31 +24,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android;
+package es.libresoft.openhealth.android.aidl.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IAgent implements Parcelable {
-	private int id;
+public class IAttribute implements Parcelable {
+	private Parcelable attr;
 
-	public static final Parcelable.Creator<IAgent> CREATOR =
-			new Parcelable.Creator<IAgent>() {
-		public IAgent createFromParcel(Parcel in) {
-			return new IAgent(in);
+	public static final Parcelable.Creator<IAttribute> CREATOR =
+			new Parcelable.Creator<IAttribute>() {
+		public IAttribute createFromParcel(Parcel in) {
+			return new IAttribute(in);
 		}
 
-		public IAgent[] newArray(int size) {
-			return new IAgent[size];
+		public IAttribute[] newArray(int size) {
+			return new IAttribute[size];
 		}
 	};
 
-	private IAgent (Parcel in) {
-		readFromParcel(in);
+	public IAttribute () {
+
 	}
 
-	public void readFromParcel(Parcel in) {
-		id = in.readInt();
+	private IAttribute (Parcel in) {
+		in.readParcelable(null);
 	}
 
 	@Override
@@ -58,19 +58,28 @@ public class IAgent implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
+		dest.writeParcelable(attr, 0);
 	}
 
-	public IAgent (int id) {
-		this.id = id;
+	public void readFromParcel(Parcel in) {
+		java.lang.ClassLoader cl = (java.lang.ClassLoader)this.getClass().getClassLoader();
+		attr = in.readParcelable(cl);
+	}
+
+	public IAttribute (Parcelable attr) {
+		this.attr = attr;
 	}
 
 	public boolean equals(Object o) {
-		if (o instanceof IAgent) {
-			IAgent agent = (IAgent) o;
-			return this.id == agent.id;
-		}
-
-		return false;
+		return attr.equals(o);
 	}
+
+	public Parcelable getAttr() {
+		return attr;
+	}
+
+	public void setAttr(Parcelable attr) {
+		this.attr = attr;
+	}
+
 }

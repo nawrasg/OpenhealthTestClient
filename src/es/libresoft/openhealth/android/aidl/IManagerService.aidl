@@ -24,10 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android;
+package es.libresoft.openhealth.android.aidl;
 
-import es.libresoft.openhealth.android.IManagerClientCallback;
-import es.libresoft.openhealth.android.IAgent;
+import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
+import es.libresoft.openhealth.android.aidl.IAgent;
 
 oneway interface IManagerService {
 

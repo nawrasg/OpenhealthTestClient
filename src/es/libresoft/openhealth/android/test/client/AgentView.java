@@ -26,10 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
-import es.libresoft.openhealth.android.IAgent;
-import es.libresoft.openhealth.android.IAgentService;
-import es.libresoft.openhealth.android.types.IAttribute;
-import es.libresoft.openhealth.android.types.IHANDLE;
+import es.libresoft.openhealth.android.aidl.IAgent;
+import es.libresoft.openhealth.android.aidl.IAgentService;
+import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
