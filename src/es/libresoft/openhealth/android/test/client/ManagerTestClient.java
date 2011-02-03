@@ -32,6 +32,7 @@ import java.util.Vector;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
+import es.libresoft.openhealth.android.aidl.types.IError;
 
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -121,6 +122,11 @@ public class ManagerTestClient extends ListActivity {
 		public void agentUnplugged(IAgent agent) throws RemoteException {
 			agents.removeElement(agent);
 			handler.post(doUpdateGUI);
+		}
+
+		@Override
+		public void error(IAgent agent, IError error) throws RemoteException {
+			System.out.println("TODO: Notify the error in the GUI");
 		}
 
 	};

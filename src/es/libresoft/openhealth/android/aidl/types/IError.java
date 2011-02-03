@@ -24,31 +24,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.aidl;
+package es.libresoft.openhealth.android.aidl.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IAgent implements Parcelable {
-	private int id;
+public class IError implements Parcelable {
 
-	public static final Parcelable.Creator<IAgent> CREATOR =
-			new Parcelable.Creator<IAgent>() {
-	    public IAgent createFromParcel(Parcel in) {
-	        return new IAgent(in);
+	private int errCode;
+	private String errMsg;
+
+	public static final Parcelable.Creator<IError> CREATOR =
+			new Parcelable.Creator<IError>() {
+	    public IError createFromParcel(Parcel in) {
+	        return new IError(in);
 	    }
-
-	    public IAgent[] newArray(int size) {
-	        return new IAgent[size];
+	
+	    public IError[] newArray(int size) {
+	        return new IError[size];
 	    }
 	};
 
-	private IAgent (Parcel in) {
+	public IError () {
+	}
+
+	public IError (int errCode, String errMsg) {
+		this.errCode = errCode;
+		this.errMsg = errMsg;
+	}
+
+	private IError (Parcel in) {
 		readFromParcel(in);
 	}
 
 	public void readFromParcel(Parcel in) {
-		id = in.readInt();
+		errCode = in.readInt();
+		errMsg = in.readString();
 	}
 
 	@Override
@@ -58,27 +69,15 @@ public class IAgent implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
+		dest.writeInt(errCode);
+		dest.writeString(errMsg);
 	}
 
-	public IAgent () {
+	public int getErrCode() {
+		return errCode;
 	}
 
-	public IAgent (int id) {
-		this.id = id;
-	}
-
-	public boolean equals(Object o) {
-		if (o instanceof IAgent) {
-			IAgent agent = (IAgent) o;
-			return this.id == agent.id;
-		}
-
-		return false;
-	}
-
-	public int getId() {
-		return id;
+	public String getErrMsg() {
+		return errMsg;
 	}
 }
-

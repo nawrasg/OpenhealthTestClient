@@ -28,10 +28,11 @@ package es.libresoft.openhealth.android.aidl;
 
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
+import es.libresoft.openhealth.android.aidl.types.IError;
 
 interface IAgentService {
 	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr);
-	boolean updateMDS(in IAgent agent);
+	boolean updateMDS(in IAgent agent, out IError err);
 
 	void connect(in IAgent agent);
 }

@@ -44,6 +44,7 @@ import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
 //import es.libresoft.openhealth.android.aidl.types.IAttribute;
+import es.libresoft.openhealth.android.aidl.types.IError;
 
 public class AgentView extends Activity {
 
@@ -121,16 +122,23 @@ public class AgentView extends Activity {
 	private void updateMDS() {
 		try {
 			AsyncTask<IAgent, Integer, Boolean> at = new AsyncTask<IAgent, Integer, Boolean>() {
+				//TODO: Check more deeply if race condition can happen
+				IError err = new IError();
+
 				protected Boolean doInBackground(IAgent... agent) {
 					try {
-						return agentService.updateMDS(agent[0]);
+						return agentService.updateMDS(agent[0], err);
 					} catch (RemoteException e) {
 						return false;
 					}
 				}
 
 				protected void onPostExecute(Boolean result) {
-					Toast toast = Toast.makeText(getApplicationContext(), "MDS updated: " +  result, Toast.LENGTH_SHORT);
+					Toast toast;
+					if (result)
+						toast = Toast.makeText(getApplicationContext(), "MDS updated correctly", Toast.LENGTH_SHORT);
+					else
+						toast = Toast.makeText(getApplicationContext(), "MDS was not updated, error: " + err.getErrMsg(), Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 				}
