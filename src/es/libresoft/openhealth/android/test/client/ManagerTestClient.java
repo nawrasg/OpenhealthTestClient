@@ -129,6 +129,12 @@ public class ManagerTestClient extends ListActivity {
 			System.out.println("TODO: Notify the error in the GUI");
 		}
 
+		@Override
+		public void agentChangeState(IAgent agent, String state)
+				throws RemoteException {
+			System.out.println("Agent " + agent.getId() + " Change to " + state);
+		}
+
 	};
 
 	private ServiceConnection healthConnection = new ServiceConnection() {

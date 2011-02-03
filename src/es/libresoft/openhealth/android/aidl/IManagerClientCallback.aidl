@@ -41,6 +41,11 @@ oneway interface IManagerClientCallback {
 	void agentUnplugged(in IAgent agent);
 
 	/**
+	 * Called when the state of the agent changes.
+	 */
+	void agentChangeState(in IAgent agent, String state);
+
+	/**
 	 * Notifies asynchronous error in the agent
 	 */
 	void error(in IAgent agent, in IError error);

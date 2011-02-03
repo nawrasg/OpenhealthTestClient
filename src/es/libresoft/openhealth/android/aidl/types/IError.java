@@ -80,4 +80,12 @@ public class IError implements Parcelable {
 	public String getErrMsg() {
 		return errMsg;
 	}
+
+	public void setErrCode(int errCode) {
+		this.errCode = errCode;
+	}
+
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
 }
