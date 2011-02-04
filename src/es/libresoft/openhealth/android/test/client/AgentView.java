@@ -44,14 +44,15 @@ import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
 //import es.libresoft.openhealth.android.aidl.types.IAttribute;
+import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.IHANDLE;
 
 public class AgentView extends Activity {
 
 	private IAgent agent;
 	private IAgentService agentService = null;
 	private boolean isBound = false;
-//	private IAttribute agentHandle = new IAttribute();
 
 	private ServiceConnection agentConnection = new ServiceConnection() {
 
@@ -61,10 +62,15 @@ public class AgentView extends Activity {
 			agentService = IAgentService.Stub.asInterface(service);
 			isBound = true;
 
-			/*
 			try
 			{
-				agentService.getAttribute(agent, 2337, agentHandle);
+				IAttribute agentHandle = new IAttribute();
+				IError error = new IError();
+				agentService.getAttribute(agent, 2337, agentHandle, error);
+				if (error.getErrCode() != 0) {
+					System.err.println("Error getting the attribute: " + error.getErrMsg());
+					return;
+				}
 				System.out.println("attribute = " + agentHandle);
 				IHANDLE h = (IHANDLE) agentHandle.getAttr();
 				System.out.println("handle = " + h);
@@ -73,7 +79,7 @@ public class AgentView extends Activity {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			 */
+
 		}
 
 		@Override
