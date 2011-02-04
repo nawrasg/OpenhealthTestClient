@@ -1,8 +1,8 @@
 /*
-Copyright (C) 2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
+Copyright (C) 2008-2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
-Author: Santiago Carot Nemesio <scarot@libresoft.es>
+Author: Santiago Carot-Nemesio <scarot@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -23,7 +23,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
 package es.libresoft.openhealth.android.aidl;
 
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
