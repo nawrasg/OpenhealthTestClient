@@ -48,7 +48,7 @@ public class IAttribute implements Parcelable {
 	}
 
 	private IAttribute (Parcel in) {
-		in.readParcelable(null);
+		readFromParcel(in);
 	}
 
 	@Override
