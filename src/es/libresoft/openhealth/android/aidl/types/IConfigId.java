@@ -30,6 +30,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class IConfigId implements Parcelable {
+
+	public static final int manager_config_response	=	0;
+	public static final int standard_config_start	=	1;
+	public static final int standard_config_end		=	16383;
+	public static final int extended_config_start	=	16384;
+	public static final int extended_config_end		=	32767;
+	public static final int reserved_start			=	32768;
+	public static final int reserved_end			=	65535;
+
 	private int configId;
 
 	public static final Parcelable.Creator<IConfigId> CREATOR =
