@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import ieee_11073.part_10101.Nomenclature;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -46,7 +47,7 @@ import es.libresoft.openhealth.android.aidl.IAgentService;
 //import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.IHANDLE;
+import es.libresoft.openhealth.android.aidl.types.ISystemModel;
 
 public class AgentView extends Activity {
 
@@ -64,18 +65,21 @@ public class AgentView extends Activity {
 
 			try
 			{
-				IAttribute agentHandle = new IAttribute();
+				IAttribute attribute = new IAttribute();
 				IError error = new IError();
-				agentService.getAttribute(agent, 2337, agentHandle, error);
+				agentService.getAttribute(agent, Nomenclature.MDC_ATTR_ID_MODEL, attribute, error);
 				if (error.getErrCode() != 0) {
 					System.err.println("Error getting the attribute: " + error.getErrMsg());
 					return;
 				}
+				/*
 				System.out.println("attribute = " + agentHandle);
 				IHANDLE h = (IHANDLE) agentHandle.getAttr();
 				System.out.println("handle = " + h);
 				System.out.println("Handle = " + h.getHandle());
-				// TODO: Set correct nomenclature code here to avoid magic numbers
+				 */
+				ISystemModel sm = (ISystemModel) attribute.getAttr();
+				System.err.println ("Model manuf:  " + sm.getManufacturer() + ". Model model num.: " + sm.getModelNumber());
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
