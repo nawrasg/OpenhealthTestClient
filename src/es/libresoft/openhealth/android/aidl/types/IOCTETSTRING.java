@@ -100,4 +100,15 @@ public class IOCTETSTRING implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		String msg = "0x";
+
+		if (octetString.length == 0) return "";
+		
+		for (int i = 0; i < octetString.length; i++)
+			msg += Integer.toHexString(octetString[i]);
+		return msg;
+	}
+
 }

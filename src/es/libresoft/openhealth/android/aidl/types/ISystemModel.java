@@ -122,4 +122,9 @@ public class ISystemModel implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Manuf[" + manufacturer + "]" + "\nModel[" + modelNumber + "]";
+	}
+
 }

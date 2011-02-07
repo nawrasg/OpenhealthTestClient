@@ -76,4 +76,10 @@ public class IHANDLE implements Parcelable {
 		IHANDLE agent = (IHANDLE) o;
 		return this.handle == agent.handle;
 	}
+
+	@Override
+	public String toString() {
+		return "0x" + Integer.toHexString(handle);
+	}
+
 }

@@ -108,4 +108,20 @@ public class IConfigId implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		String msg = "0x" + Integer.toHexString(configId);
+
+		switch (configId) {
+			case manager_config_response: msg += ": manager_config_response"; break;
+			case standard_config_start:	msg += ": standard_config_start"; break;
+			case standard_config_end: msg += ": standard_config_end"; break;
+			case extended_config_start:	msg += ": extended_config_start"; break;
+			case extended_config_end: msg += ": extended_config_end"; break;
+			case reserved_start: msg += ": reserved_start"; break;
+			case reserved_end: msg += ": reserved_end"; break;
+		}
+		return msg;
+	}
+
 }
