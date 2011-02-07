@@ -31,6 +31,8 @@ import android.os.Parcelable;
 
 public class IAttribute implements Parcelable {
 	private Parcelable attr;
+	private int attrId;
+	private String attrIdStr;
 
 	public static final Parcelable.Creator<IAttribute> CREATOR =
 			new Parcelable.Creator<IAttribute>() {
@@ -59,19 +61,21 @@ public class IAttribute implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(attr, 0);
+		dest.writeInt(attrId);
+		dest.writeString(attrIdStr);
 	}
 
 	public void readFromParcel(Parcel in) {
 		java.lang.ClassLoader cl = (java.lang.ClassLoader)this.getClass().getClassLoader();
 		attr = in.readParcelable(cl);
+		attrId = in.readInt();
+		attrIdStr = in.readString();
 	}
 
-	public IAttribute (Parcelable attr) {
+	public IAttribute (Parcelable attr, int attrId, String attrIdStr) {
 		this.attr = attr;
-	}
-
-	public boolean equals(Object o) {
-		return attr.equals(o);
+		this.attrId = attrId;
+		this.attrIdStr = attrIdStr;
 	}
 
 	public Parcelable getAttr() {
@@ -80,6 +84,50 @@ public class IAttribute implements Parcelable {
 
 	public void setAttr(Parcelable attr) {
 		this.attr = attr;
+	}
+
+	public int getAttrId() {
+		return attrId;
+	}
+
+	public void setAttrId(int attrId) {
+		this.attrId = attrId;
+	}
+
+	public String getAttrIdStr() {
+		return attrIdStr;
+	}
+
+	public void setAttrIdStr(String attrIdStr) {
+		this.attrIdStr = attrIdStr;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attr == null) ? 0 : attr.hashCode());
+		result = prime * result + attrId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof IAttribute))
+			return false;
+		IAttribute other = (IAttribute) obj;
+		if (attr == null) {
+			if (other.attr != null)
+				return false;
+		} else if (!attr.equals(other.attr))
+			return false;
+		if (attrId != other.attrId)
+			return false;
+		return true;
 	}
 
 }
