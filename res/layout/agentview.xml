@@ -1,7 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<TableLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-<TextView android:id="@+id/text" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-</LinearLayout>
+  <TableRow>
+  	<TextView
+  		android:layout_column="1"
+  		android:text="Handle"
+  		android:padding="3dip" />
+  	<TextView
+  		android:id="@+id/handle"
+  		android:layout_column="1"
+  		android:text=""
+  		android:padding="3dip" />
+  </TableRow>
+  <TableRow>
+    <TextView
+  		android:layout_column="1"
+  		android:text="System-Model"
+  		android:padding="3dip" />
+  	<TextView
+  		android:id="@+id/systemModel"
+  		android:layout_column="1"
+  		android:text=""
+  		android:padding="3dip" />
+  </TableRow>
+  <TableRow>
+    <TextView
+  		android:layout_column="1"
+  		android:text="System-Id"
+  		android:padding="3dip" />
+  	<TextView
+  		android:id="@+id/systemId"
+  		android:layout_column="1"
+  		android:text=""
+  		android:padding="3dip" />
+  </TableRow>
+  <TableRow>
+    <TextView
+  		android:layout_column="1"
+  		android:text="Dev-Configuration-Id"
+  		android:padding="3dip" />
+  	<TextView
+  		android:id="@+id/devConfigurationId"
+  		android:layout_column="1"
+  		android:text=""
+  		android:padding="3dip" />
+  </TableRow>
+</TableLayout>

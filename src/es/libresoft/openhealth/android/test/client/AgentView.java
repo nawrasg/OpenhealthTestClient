@@ -44,9 +44,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
-//import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
+import es.libresoft.openhealth.android.aidl.types.IConfigId;
 import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.IHANDLE;
+import es.libresoft.openhealth.android.aidl.types.IOCTETSTRING;
 import es.libresoft.openhealth.android.aidl.types.ISystemModel;
 
 public class AgentView extends Activity {
@@ -62,28 +64,7 @@ public class AgentView extends Activity {
 
 			agentService = IAgentService.Stub.asInterface(service);
 			isBound = true;
-
-			try
-			{
-				IAttribute attribute = new IAttribute();
-				IError error = new IError();
-				agentService.getAttribute(agent, Nomenclature.MDC_ATTR_ID_MODEL, attribute, error);
-				if (error.getErrCode() != 0) {
-					System.err.println("Error getting the attribute: " + error.getErrMsg());
-					return;
-				}
-				/*
-				System.out.println("attribute = " + agentHandle);
-				IHANDLE h = (IHANDLE) agentHandle.getAttr();
-				System.out.println("handle = " + h);
-				System.out.println("Handle = " + h.getHandle());
-				 */
-				ISystemModel sm = (ISystemModel) attribute.getAttr();
-				System.err.println ("Model manuf:  " + sm.getManufacturer() + ". Model model num.: " + sm.getModelNumber());
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-
+			updateMDS();
 		}
 
 		@Override
@@ -112,8 +93,6 @@ public class AgentView extends Activity {
 		}
 
 		setContentView(R.layout.agentview);
-		TextView tv = (TextView) findViewById(R.id.text);
-		tv.setText("Loading Agent id");
 		bindService(new Intent(IAgentService.class.getName()), agentConnection, Context.BIND_AUTO_CREATE);
 		isBound = true;
 	}
@@ -143,14 +122,52 @@ public class AgentView extends Activity {
 					}
 				}
 
-				protected void onPostExecute(Boolean result) {
+				private void show(String msg) {
 					Toast toast;
-					if (result)
-						toast = Toast.makeText(getApplicationContext(), "MDS updated correctly", Toast.LENGTH_SHORT);
-					else
-						toast = Toast.makeText(getApplicationContext(), "MDS was not updated, error: " + err.getErrMsg(), Toast.LENGTH_SHORT);
+					
+					toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
+				}
+				
+				protected void onPostExecute(Boolean result) {
+					IAttribute attrHandle = new IAttribute();
+					IAttribute attrIdModel = new IAttribute();
+					IAttribute attrSysId = new IAttribute();
+					IAttribute attrDevConfigId = new IAttribute();
+
+					if (!result) {
+						show("MDS not updated, err: " + err.getErrMsg());
+						return;
+					}
+
+					try {
+						agentService.getAttribute(agent, Nomenclature.MDC_ATTR_ID_HANDLE, attrHandle, err);
+						if (err.getErrCode() == 0)
+							agentService.getAttribute(agent, Nomenclature.MDC_ATTR_ID_MODEL, attrIdModel, err);
+						if (err.getErrCode() == 0)
+							agentService.getAttribute(agent, Nomenclature.MDC_ATTR_SYS_ID, attrSysId, err);
+						if (err.getErrCode() == 0)
+							agentService.getAttribute(agent, Nomenclature.MDC_ATTR_DEV_CONFIG_ID, attrDevConfigId, err);
+					} catch (RemoteException e) {
+						show("Error getting attr: remote exception");
+						e.printStackTrace();
+					}
+					if (err.getErrCode() != 0) {
+						show("Error getting attr: " +  err.getErrMsg());
+						return;
+					}
+					
+					IHANDLE handle = (IHANDLE) attrHandle.getAttr();
+					ISystemModel sm = (ISystemModel) attrIdModel.getAttr();
+					IOCTETSTRING sysId = (IOCTETSTRING) attrSysId.getAttr();
+					IConfigId devConfId = (IConfigId) attrDevConfigId.getAttr();
+					((TextView)findViewById(R.id.handle)).setText(handle.toString());
+					((TextView)findViewById(R.id.systemModel)).setText(sm.toString());
+					((TextView)findViewById(R.id.systemId)).setText(sysId.toString());
+					((TextView)findViewById(R.id.devConfigurationId)).setText(devConfId.toString());
+
+					show("MDS updated");
 				}
 			};
 			at.execute(agent);
