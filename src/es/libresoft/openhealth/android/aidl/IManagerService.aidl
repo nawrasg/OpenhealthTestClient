@@ -28,7 +28,7 @@ package es.libresoft.openhealth.android.aidl;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IAgent;
 
-oneway interface IManagerService {
+interface IManagerService {
 
 	void agents(out List<IAgent> agentList);
 
