@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ieee_11073.part_10101.Nomenclature;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -45,11 +48,7 @@ import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
-import es.libresoft.openhealth.android.aidl.types.IConfigId;
 import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.IHANDLE;
-import es.libresoft.openhealth.android.aidl.types.IOCTETSTRING;
-import es.libresoft.openhealth.android.aidl.types.ISystemModel;
 
 public class AgentView extends Activity {
 
@@ -123,11 +122,11 @@ public class AgentView extends Activity {
 				}
 
 				private void show(String msg) {
-					Toast toast;
+					Toast t;
 					
-					toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
+					t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+					t.setGravity(Gravity.CENTER, 0, 0);
+					t.show();
 				}
 				
 				protected void onPostExecute(Boolean result) {
@@ -157,15 +156,11 @@ public class AgentView extends Activity {
 						show("Error getting attr: " +  err.getErrMsg());
 						return;
 					}
-					
-					IHANDLE handle = (IHANDLE) attrHandle.getAttr();
-					ISystemModel sm = (ISystemModel) attrIdModel.getAttr();
-					IOCTETSTRING sysId = (IOCTETSTRING) attrSysId.getAttr();
-					IConfigId devConfId = (IConfigId) attrDevConfigId.getAttr();
-					((TextView)findViewById(R.id.handle)).setText(handle.toString());
-					((TextView)findViewById(R.id.systemModel)).setText(sm.toString());
-					((TextView)findViewById(R.id.systemId)).setText(sysId.toString());
-					((TextView)findViewById(R.id.devConfigurationId)).setText(devConfId.toString());
+
+					((TextView)findViewById(R.id.handle)).setText(attrHandle.getAttr().toString());
+					((TextView)findViewById(R.id.systemModel)).setText(attrIdModel.getAttr().toString());
+					((TextView)findViewById(R.id.systemId)).setText(attrSysId.getAttr().toString());
+					((TextView)findViewById(R.id.devConfigurationId)).setText(attrDevConfigId.getAttr().toString());
 
 					show("MDS updated");
 				}
@@ -191,7 +186,25 @@ public class AgentView extends Activity {
 				updateMDS();
 				break;
 			case R.id.MENU_ATTRIBUTES:
+				IAttribute[] attrs = null;
+				try {
+					List<IAttribute> lattrs = new ArrayList<IAttribute>();
+					IError err = new IError();
+					agentService.getAttributes(agent, lattrs, err);
+					if (err.getErrCode() != 0) {
+						System.err.println("Error getting attributes " + err.getErrMsg());
+						return super.onOptionsItemSelected(item);
+					}
+					attrs = new IAttribute[lattrs.size()];
+					attrs = (IAttribute[])(lattrs.toArray(attrs));
+				} catch (RemoteException e) {
+					System.err.println("RemoteException in agentService.getAttributes" + e.getMessage());
+					e.printStackTrace();
+					return super.onOptionsItemSelected(item);
+				}
+
 				Intent intent = new Intent (AgentView.this,AgentAttributeView.class);
+				intent.putExtra("attributes", attrs);
 				startActivity(intent);
 				break;
 		}

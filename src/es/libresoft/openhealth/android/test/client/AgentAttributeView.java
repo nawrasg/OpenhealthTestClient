@@ -26,17 +26,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class AgentAttributeView extends Activity {
+
+	private void show(String msg) {
+		Toast t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+		t.setGravity(Gravity.CENTER, 0, 0);
+		t.show();
+	}
+
+	private void showAttributes(IAttribute[] attrs) {
+		TableLayout tl = (TableLayout)findViewById(R.layout.agentattributeview);
+		TableRow tr = null;
+		TextView tvname = null;
+		TextView tvvalue = null;
+		for (IAttribute attr : attrs) {
+			tr = new TableRow(this);
+			tvname = new TextView(this);
+			tvvalue = new TextView(this);
+			tvname.setText(attr.getAttrIdStr());
+			tvvalue.setText(attr.getAttr().toString());
+			tr.addView(tvname);
+			tr.addView(tvvalue);
+			tl.addView(tr);
+		}
+
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.agentattributeview);
+
+		IAttribute[] attrs;
+		Bundle extras  = getIntent().getExtras();
+		if (extras == null || extras.containsKey("attributes")) {
+			show("Not sended attributes to be displayed");
+			finish();
+			return;
+		}
+		try {
+			attrs = (IAttribute[]) extras.get("attrs");
+		} catch (Exception e) {
+			show("Can't get attributes to be displayed");
+			finish();
+			return;
+		}
+
+		showAttributes(attrs);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
