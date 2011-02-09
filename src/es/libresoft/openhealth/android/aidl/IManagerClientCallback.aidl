@@ -28,6 +28,7 @@ package es.libresoft.openhealth.android.aidl;
 
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 
 oneway interface IManagerClientCallback {
 	/**
@@ -49,4 +50,9 @@ oneway interface IManagerClientCallback {
 	 * Notifies asynchronous error in the agent
 	 */
 	void error(in IAgent agent, in IError error);
+
+	/**
+	 * Notifies new meassures that are receive in the agent
+	 */
+	void agentNewMeassure(in IAgent agent, in IAgentMetric metric);
 }

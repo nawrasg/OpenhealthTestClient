@@ -33,6 +33,7 @@ import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -133,6 +134,12 @@ public class ManagerTestClient extends ListActivity {
 		public void agentChangeState(IAgent agent, String state)
 				throws RemoteException {
 			System.out.println("Agent " + agent.getId() + " Change to " + state);
+		}
+
+		@Override
+		public void agentNewMeassure(IAgent agent, IAgentMetric metric)
+				throws RemoteException {
+			System.out.println("TODO: received measure from: " + agent);
 		}
 
 	};
