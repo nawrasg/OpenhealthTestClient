@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.aidl.types.measures;
 
-import es.libresoft.mdnf.FloatType;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -35,6 +34,8 @@ public class IValueMeasure implements Parcelable {
 	//internal value representation by exponent and mantissa (float is not needed to be pass from ipc call)
 	private int value_exp;
 	private int value_mag;
+	private double value;
+	private String valueStr;
 
 	public static final Parcelable.Creator<IValueMeasure> CREATOR =
 			new Parcelable.Creator<IValueMeasure>() {
@@ -51,12 +52,16 @@ public class IValueMeasure implements Parcelable {
 		measure_type = in.readInt();
 		value_exp = in.readInt();
 		value_mag = in.readInt();
+		value = in.readDouble();
+		valueStr = in.readString();
 	}
 
-	public IValueMeasure (int mType, int exp, int mag){
-		measure_type = mType;
-		value_exp = exp;
-		value_mag = mag;
+	public IValueMeasure (int mType, int exp, int mag, double value, String valueStr){
+		this.measure_type = mType;
+		this.value_exp = exp;
+		this.value_mag = mag;
+		this.value = value;
+		this.valueStr = valueStr;
 	}
 
 	public int getMeasureType(){return measure_type;}
@@ -71,13 +76,15 @@ public class IValueMeasure implements Parcelable {
 		dest.writeInt(measure_type);
 		dest.writeInt(value_exp);
 		dest.writeInt(value_mag);
+		dest.writeDouble(value);
+		dest.writeString(valueStr);
 	}
 
-	public FloatType getFloatType () throws Exception{
-		return new FloatType(value_exp,value_mag);
+	public double getFloatType () throws Exception{
+		return value;
 	}
 
 	public String toString(){
-		return value_mag + "*10^" + value_exp;
+		return valueStr;
 	}
 }
