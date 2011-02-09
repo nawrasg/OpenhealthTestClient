@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package es.libresoft.openhealth.android.test.client;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ieee_11073.part_10101.Nomenclature;
 import android.app.Activity;
@@ -186,26 +185,26 @@ public class AgentView extends Activity {
 				updateMDS();
 				break;
 			case R.id.MENU_ATTRIBUTES:
-				IAttribute[] attrs = null;
 				try {
-					List<IAttribute> lattrs = new ArrayList<IAttribute>();
+					ArrayList<IAttribute> attrs = new ArrayList<IAttribute>();
 					IError err = new IError();
-					agentService.getAttributes(agent, lattrs, err);
+					agentService.getAttributes(agent, attrs, err);
 					if (err.getErrCode() != 0) {
 						System.err.println("Error getting attributes " + err.getErrMsg());
 						return super.onOptionsItemSelected(item);
 					}
-					attrs = new IAttribute[lattrs.size()];
-					attrs = (IAttribute[])(lattrs.toArray(attrs));
+
+					Intent intent = new Intent (AgentView.this,AgentAttributeView.class);
+					Bundle extras = new Bundle();
+					extras.putParcelableArrayList("attributes", attrs);
+					intent.putExtras(extras);
+					startActivity(intent);
 				} catch (RemoteException e) {
 					System.err.println("RemoteException in agentService.getAttributes" + e.getMessage());
 					e.printStackTrace();
 					return super.onOptionsItemSelected(item);
 				}
 
-				Intent intent = new Intent (AgentView.this,AgentAttributeView.class);
-				intent.putExtra("attributes", attrs);
-				startActivity(intent);
 				break;
 		}
 		return super.onOptionsItemSelected(item);

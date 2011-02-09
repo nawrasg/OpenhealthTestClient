@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import java.util.ArrayList;
+
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import android.app.Activity;
 import android.os.Bundle;
@@ -43,8 +45,8 @@ public class AgentAttributeView extends Activity {
 		t.show();
 	}
 
-	private void showAttributes(IAttribute[] attrs) {
-		TableLayout tl = (TableLayout)findViewById(R.layout.agentattributeview);
+	private void showAttributes(ArrayList<IAttribute> attrs) {
+		TableLayout tl = (TableLayout)findViewById(R.id.agentattributetable);
 		TableRow tr = null;
 		TextView tvname = null;
 		TextView tvvalue = null;
@@ -67,22 +69,22 @@ public class AgentAttributeView extends Activity {
 
 		setContentView(R.layout.agentattributeview);
 
-		IAttribute[] attrs;
+		ArrayList<IAttribute> attrs;
 		Bundle extras  = getIntent().getExtras();
-		if (extras == null || extras.containsKey("attributes")) {
+		if (extras == null || !extras.containsKey("attributes")) {
 			show("Not sended attributes to be displayed");
 			finish();
 			return;
 		}
 		try {
-			attrs = (IAttribute[]) extras.get("attrs");
+			attrs = extras.getParcelableArrayList("attributes");
+			showAttributes(attrs);
 		} catch (Exception e) {
 			show("Can't get attributes to be displayed");
+			e.printStackTrace();
 			finish();
-			return;
 		}
 
-		showAttributes(attrs);
 	}
 
 	@Override
