@@ -108,4 +108,13 @@ public class ITypeVerList implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		String str = "";
+		for (ITypeVer typeVer : values) {
+			if (str != "") str += "\n";
+			str += "[" + typeVer.toString() + "]";
+		}
+		return str;
+	}
 }

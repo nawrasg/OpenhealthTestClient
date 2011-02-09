@@ -118,4 +118,9 @@ public class ITypeVer implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "v:0x" + Integer.toHexString(version) + ",t:" + type.toString();
+	}
+
 }

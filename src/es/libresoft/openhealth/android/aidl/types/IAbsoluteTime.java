@@ -201,4 +201,13 @@ public class IAbsoluteTime implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		String str;
+
+		/* MM/DD/YY_HH:MM:SS_FF */
+		str = month + "/" + day + "/" + year;
+		str += "_" + hour + ":" + minute + ":" + second + "_" + secFractions;
+		return str;
+	}
 }

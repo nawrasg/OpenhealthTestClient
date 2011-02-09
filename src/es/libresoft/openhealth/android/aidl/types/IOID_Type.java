@@ -80,4 +80,9 @@ public class IOID_Type implements Parcelable {
 		IOID_Type agent = (IOID_Type) o;
 		return this.type == agent.type;
 	}
+
+	@Override
+	public String toString() {
+		return "0x" + Integer.toHexString(type);
+	}
 }
