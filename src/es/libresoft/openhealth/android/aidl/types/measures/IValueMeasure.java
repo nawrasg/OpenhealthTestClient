@@ -29,8 +29,7 @@ package es.libresoft.openhealth.android.aidl.types.measures;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IValueMeasure implements Parcelable {
-	private int measure_type;
+public class IValueMeasure extends IMeasure implements Parcelable {
 	//internal value representation by exponent and mantissa (float is not needed to be pass from ipc call)
 	private int value_exp;
 	private int value_mag;
@@ -49,7 +48,7 @@ public class IValueMeasure implements Parcelable {
 	};
 
 	private IValueMeasure (Parcel in){
-		measure_type = in.readInt();
+		super(in);
 		value_exp = in.readInt();
 		value_mag = in.readInt();
 		value = in.readDouble();
@@ -57,14 +56,12 @@ public class IValueMeasure implements Parcelable {
 	}
 
 	public IValueMeasure (int mType, int exp, int mag, double value, String valueStr){
-		this.measure_type = mType;
+		super(mType);
 		this.value_exp = exp;
 		this.value_mag = mag;
 		this.value = value;
 		this.valueStr = valueStr;
 	}
-
-	public int getMeasureType(){return measure_type;}
 
 	@Override
 	public int describeContents() {
@@ -73,14 +70,14 @@ public class IValueMeasure implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(measure_type);
+		super.writeToParcel(dest, flags);
 		dest.writeInt(value_exp);
 		dest.writeInt(value_mag);
 		dest.writeDouble(value);
 		dest.writeString(valueStr);
 	}
 
-	public double getFloatType () throws Exception{
+	public double getFloatType () {
 		return value;
 	}
 

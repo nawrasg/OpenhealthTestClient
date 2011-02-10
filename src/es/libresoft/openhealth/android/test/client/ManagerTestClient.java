@@ -35,6 +35,7 @@ import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
+import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasureArray;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasureAttribute;
 import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
@@ -152,20 +153,20 @@ public class ManagerTestClient extends ListActivity {
 				}
 			}
 
-			for (Parcelable parcel: metric.getMeasures()) {
-				if (parcel instanceof IValueMeasure) {
-					IValueMeasure value = (IValueMeasure) parcel;
+			for (IMeasure measure: metric.getMeasures()) {
+				if (measure instanceof IValueMeasure) {
+					IValueMeasure value = (IValueMeasure) measure;
 					try {
 						System.err.println("Measure type:" +  value.getMeasureType() + " Measure value: " + value.getFloatType());
 					} catch (Exception e) {
 
 					}
-				} else if (parcel instanceof IDateMeasure) {
-					IDateMeasure date = (IDateMeasure) parcel;
+				} else if (measure instanceof IDateMeasure) {
+					IDateMeasure date = (IDateMeasure) measure;
 					System.err.println("Measure type: " + date.getMeasureType() + " Measure value: " + date.getTimeStamp());
-				} else if (parcel instanceof IMeasureArray) {
+				} else if (measure instanceof IMeasureArray) {
 					//TODO: this is so dirty, the only purpose is to show the unmarshall of arguments
-					IMeasureArray array = (IMeasureArray) parcel;
+					IMeasureArray array = (IMeasureArray) measure;
 					for (Parcelable parcel2: array.getList()) {
 						if (parcel2 instanceof IValueMeasure) {
 							IValueMeasure value = (IValueMeasure) parcel2;

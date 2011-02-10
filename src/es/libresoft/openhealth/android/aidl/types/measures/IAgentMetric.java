@@ -35,7 +35,7 @@ import android.os.Parcelable;
 public class IAgentMetric implements Parcelable {
 
 	public ArrayList<Parcelable> attributes = new ArrayList<Parcelable>();
-	public ArrayList<Parcelable> measures = new ArrayList<Parcelable>();
+	public ArrayList<IMeasure> measures = new ArrayList<IMeasure>();
 
 	public static final Parcelable.Creator<IAgentMetric> CREATOR =
 			new Parcelable.Creator<IAgentMetric>() {
@@ -67,7 +67,7 @@ public class IAgentMetric implements Parcelable {
 		dest.writeList(measures);
 	}
 
-	public void addMeasure(Parcelable obj) {
+	public void addMeasure(IMeasure obj) {
 		measures.add(obj);
 	}
 
@@ -79,7 +79,7 @@ public class IAgentMetric implements Parcelable {
 		return attributes;
 	}
 
-	public List<Parcelable> getMeasures(){
+	public List<IMeasure> getMeasures(){
 		return measures;
 	}
 

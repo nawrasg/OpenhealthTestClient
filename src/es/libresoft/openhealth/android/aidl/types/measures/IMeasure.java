@@ -26,35 +26,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.aidl.types.measures;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IMeasureArray extends IMeasure implements Parcelable {
-	List<IMeasure> list = new ArrayList<IMeasure>();
+public class IMeasure implements Parcelable {
+	private int measure_type;
 
-	public static final Parcelable.Creator<IMeasureArray> CREATOR =
-								new Parcelable.Creator<IMeasureArray>() {
-		public IMeasureArray createFromParcel(Parcel in) {
-			return new IMeasureArray(in);
+	public static final Parcelable.Creator<IMeasure> CREATOR =
+			new Parcelable.Creator<IMeasure>() {
+		public IMeasure createFromParcel(Parcel in) {
+			return new IMeasure(in);
 		}
 
-		public IMeasureArray[] newArray(int size) {
-			return new IMeasureArray[size];
+		public IMeasure[] newArray(int size) {
+			return new IMeasure[size];
 		}
 	};
 
-	private IMeasureArray (Parcel in){
-		super(in);
-		ClassLoader cl = this.getClass().getClassLoader();
-		in.readList(list, cl);
+	protected IMeasure (Parcel in){
+		measure_type = in.readInt();
 	}
 
-	public IMeasureArray (int mType, List<IMeasure> values) {
-		super(mType);
-		list = values;
+	public IMeasure (int mType){
+		this.measure_type = mType;
+	}
+
+	public int getMeasureType() {
+		return measure_type;
 	}
 
 	@Override
@@ -64,36 +62,7 @@ public class IMeasureArray extends IMeasure implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeList(list);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((list == null) ? 0 : list.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof IMeasureArray))
-			return false;
-		IMeasureArray other = (IMeasureArray) obj;
-		if (list == null) {
-			if (other.list != null)
-				return false;
-		} else if (!list.equals(other.list))
-			return false;
-		return true;
-	}
-
-	public List<IMeasure> getList() {
-		return list;
+		dest.writeInt(measure_type);
 	}
 
 }

@@ -32,9 +32,8 @@ import java.util.Date;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IDateMeasure implements Parcelable{
+public class IDateMeasure extends IMeasure implements Parcelable{
 
-	private int measure_type;
 	//internal value representation of the date
 	private long timestamp;
 	private Date date;
@@ -51,18 +50,16 @@ public class IDateMeasure implements Parcelable{
 	};
 
 	private IDateMeasure (Parcel in){
-		measure_type = in.readInt();
+		super(in);
 		timestamp = in.readLong();
 		date = new Date(timestamp);
 	}
 
 	public IDateMeasure (int mType, long timestamp){
-		measure_type = mType;
+		super(mType);
 		this.timestamp = timestamp;
 		date = new Date(timestamp);
 	}
-
-	public int getMeasureType(){return measure_type;}
 
 	public Date getTimeStamp(){
 		return date;
@@ -75,7 +72,7 @@ public class IDateMeasure implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(measure_type);
+		super.writeToParcel(dest, flags);
 		dest.writeLong(timestamp);
 	}
 
