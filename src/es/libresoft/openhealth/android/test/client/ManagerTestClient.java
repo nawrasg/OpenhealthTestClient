@@ -173,6 +173,7 @@ public class ManagerTestClient extends ListActivity {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			managerService = IManagerService.Stub.asInterface(service);
+			GlobalStorage.getInstance().set(IManagerService.class.toString(), managerService);
 
 			try {
 				managerService.registerApplication(msc);
@@ -188,6 +189,7 @@ public class ManagerTestClient extends ListActivity {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			System.err.println("Service disconnected ");
+			GlobalStorage.getInstance().del(IManagerService.class.toString());
 			managerService = null;
 			isBound = false;
 		}
@@ -232,7 +234,6 @@ public class ManagerTestClient extends ListActivity {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		if (managerService != null && isBound) {
 			try {
 				managerService.unregisterApplication(msc);
@@ -241,6 +242,8 @@ public class ManagerTestClient extends ListActivity {
 			}
 		}
 		doUnbindService();
+
+		super.onDestroy();
 	}
 
 	private void updateGUI() {
