@@ -35,6 +35,7 @@ import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
+import es.libresoft.openhealth.android.aidl.types.measures.IMeasureArray;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasureAttribute;
 import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
 
@@ -162,6 +163,22 @@ public class ManagerTestClient extends ListActivity {
 				} else if (parcel instanceof IDateMeasure) {
 					IDateMeasure date = (IDateMeasure) parcel;
 					System.err.println("Measure type: " + date.getMeasureType() + " Measure value: " + date.getTimeStamp());
+				} else if (parcel instanceof IMeasureArray) {
+					//TODO: this is so dirty, the only purpose is to show the unmarshall of arguments
+					IMeasureArray array = (IMeasureArray) parcel;
+					for (Parcelable parcel2: array.getList()) {
+						if (parcel2 instanceof IValueMeasure) {
+							IValueMeasure value = (IValueMeasure) parcel2;
+							try {
+								System.err.println("Measure type:" +  value.getMeasureType() + " Measure value: " + value.getFloatType());
+							} catch (Exception e) {
+
+							}
+						} else if (parcel2 instanceof IDateMeasure) {
+							IDateMeasure date = (IDateMeasure) parcel2;
+							System.err.println("Measure type: " + date.getMeasureType() + " Measure value: " + date.getTimeStamp());
+						}
+					}
 				}
 			}
 		}
