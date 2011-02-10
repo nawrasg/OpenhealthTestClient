@@ -146,11 +146,9 @@ public class ManagerTestClient extends ListActivity {
 		public void agentNewMeassure(IAgent agent, IAgentMetric metric)
 				throws RemoteException {
 			System.out.println("TODO: received measure from: " + agent);
-			for (Parcelable parcel: metric.getAttributes()) {
-				if (parcel instanceof IMeasureAttribute) {
-					IMeasureAttribute att = (IMeasureAttribute) parcel;
-					System.err.println("Att id:" + att.getAttrIdStr() + " Att code: " + att.getCodeStr());
-				}
+			for (IMeasureAttribute parcel: metric.getAttributes()) {
+				IMeasureAttribute att = (IMeasureAttribute) parcel;
+				System.err.println("Att id:" + att.getAttrIdStr() + " Att code: " + att.getCodeStr());
 			}
 
 			for (IMeasure measure: metric.getMeasures()) {
