@@ -33,7 +33,7 @@ public class GlobalStorage {
 	private HashMap<String,Object> hm = new HashMap<String,Object>();
 
 	private GlobalStorage() {}
-	
+
 	public static GlobalStorage getInstance() {
 		return instance;
 	}
