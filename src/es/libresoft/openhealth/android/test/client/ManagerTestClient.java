@@ -34,6 +34,9 @@ import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
+import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
+import es.libresoft.openhealth.android.aidl.types.measures.IMeasureAttribute;
+import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
 
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -43,6 +46,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,6 +144,26 @@ public class ManagerTestClient extends ListActivity {
 		public void agentNewMeassure(IAgent agent, IAgentMetric metric)
 				throws RemoteException {
 			System.out.println("TODO: received measure from: " + agent);
+			for (Parcelable parcel: metric.getAttributes()) {
+				if (parcel instanceof IMeasureAttribute) {
+					IMeasureAttribute att = (IMeasureAttribute) parcel;
+					System.err.println("Att id:" + att.getAttrIdStr() + " Att code: " + att.getCodeStr());
+				}
+			}
+
+			for (Parcelable parcel: metric.getMeasures()) {
+				if (parcel instanceof IValueMeasure) {
+					IValueMeasure value = (IValueMeasure) parcel;
+					try {
+						System.err.println("Measure type:" +  value.getMeasureType() + " Measure value: " + value.getFloatType());
+					} catch (Exception e) {
+
+					}
+				} else if (parcel instanceof IDateMeasure) {
+					IDateMeasure date = (IDateMeasure) parcel;
+					System.err.println("Measure type: " + date.getMeasureType() + " Measure value: " + date.getTimeStamp());
+				}
+			}
 		}
 
 	};
