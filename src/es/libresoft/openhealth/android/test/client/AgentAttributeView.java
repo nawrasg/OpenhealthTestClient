@@ -28,9 +28,17 @@ package es.libresoft.openhealth.android.test.client;
 
 import java.util.ArrayList;
 
+import es.libresoft.openhealth.android.aidl.IAgent;
+import es.libresoft.openhealth.android.aidl.IAgentService;
+import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
+import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
+import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -39,13 +47,99 @@ import android.widget.Toast;
 
 public class AgentAttributeView extends Activity {
 
+	private IAgent agent = null;
+	
+	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
+
+		@Override
+		public void agentPlugged(IAgent ag) throws RemoteException {}
+
+		@Override
+		public void agentUnplugged(IAgent ag) throws RemoteException {
+			if (agent == null) return;
+
+			if (ag.getId() == agent.getId())
+				AgentAttributeView.this.finish();
+		}
+
+		@Override
+		public void error(IAgent ag, IError error) throws RemoteException {}
+
+		@Override
+		public void agentChangeState(IAgent ag, String state)
+				throws RemoteException {}
+
+		@Override
+		public void agentNewMeassure(IAgent ag, IAgentMetric metric)
+				throws RemoteException {}
+
+	};
+
+	private void registerManagerCallbacks() {
+		IManagerService managerService = (IManagerService)
+			GlobalStorage.getInstance().get(IManagerService.class.toString());
+
+		if (managerService == null) {
+			Log.e("AgentAttributeView", "ManagerService is null, cant get manager callbacks");
+			return;
+		}
+		try {
+			managerService.registerApplication(msc);
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	private void unregisterManagerCallbacks() {
+		IManagerService managerService = (IManagerService)
+		GlobalStorage.getInstance().get(IManagerService.class.toString());
+
+		if (managerService == null) {
+			Log.e("AgentAttributeView", "ManagerService is null, cant unregister manager callbacks");
+			return;
+		}
+		try {
+			managerService.registerApplication(msc);
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
 	private void show(String msg) {
 		Toast t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
 		t.setGravity(Gravity.CENTER, 0, 0);
 		t.show();
 	}
 
-	private void showAttributes(ArrayList<IAttribute> attrs) {
+	private boolean getAttributes(ArrayList<IAttribute> attrs) {
+		IError err = new IError();
+		try {
+			IAgentService agentService = (IAgentService)
+				GlobalStorage.getInstance().get(IAgentService.class.toString());
+			if (agentService == null) return false;
+
+			agentService.getAttributes(agent, attrs, err);
+			if (err.getErrCode() != 0) {
+				show("Error getting attributes " + err.getErrMsg());
+				System.err.println("Error getting attributes " + err.getErrMsg());
+			}
+		} catch (RemoteException e) {
+			show("RemoteException in agentService.getAttributes");
+			System.err.println("RemoteException in agentService.getAttributes" + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+
+		return err.getErrCode() == 0;
+	}
+
+	private void showAttributes() {
+		ArrayList<IAttribute> attrs = new ArrayList<IAttribute>();
+
+		if (!getAttributes(attrs)) return;
+
 		TableLayout tl = (TableLayout)findViewById(R.id.agentattributetable);
 		TableRow tr = null;
 		TextView tvname = null;
@@ -60,7 +154,6 @@ public class AgentAttributeView extends Activity {
 			tr.addView(tvvalue);
 			tl.addView(tr);
 		}
-
 	}
 
 	@Override
@@ -69,26 +162,22 @@ public class AgentAttributeView extends Activity {
 
 		setContentView(R.layout.agentattributeview);
 
-		ArrayList<IAttribute> attrs;
 		Bundle extras  = getIntent().getExtras();
-		if (extras == null || !extras.containsKey("attributes")) {
-			show("Not sended attributes to be displayed");
+		if (extras == null || !extras.containsKey("agent")) {
+			show("Not sended agent");
 			finish();
 			return;
 		}
-		try {
-			attrs = extras.getParcelableArrayList("attributes");
-			showAttributes(attrs);
-		} catch (Exception e) {
-			show("Can't get attributes to be displayed");
-			e.printStackTrace();
-			finish();
-		}
+		agent = extras.getParcelable("agent");
+		showAttributes();
 
+		registerManagerCallbacks();
 	}
 
 	@Override
 	protected void onDestroy() {
+		unregisterManagerCallbacks();
+
 		super.onDestroy();
 	}
 }

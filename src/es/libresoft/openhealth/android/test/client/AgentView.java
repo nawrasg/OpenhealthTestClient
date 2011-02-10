@@ -26,8 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
-import java.util.ArrayList;
-
 import ieee_11073.part_10101.Nomenclature;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -38,6 +36,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,14 +45,75 @@ import android.widget.TextView;
 import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
+import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
+import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 
 public class AgentView extends Activity {
 
-	private IAgent agent;
+	private IAgent agent = null;
 	private IAgentService agentService = null;
 	private boolean isBound = false;
+
+	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
+
+		@Override
+		public void agentPlugged(IAgent ag) throws RemoteException {}
+
+		@Override
+		public void agentUnplugged(IAgent ag) throws RemoteException {
+			if (agent == null) return;
+
+			if (ag.getId() == agent.getId())
+				AgentView.this.finish();
+		}
+
+		@Override
+		public void error(IAgent ag, IError error) throws RemoteException {}
+
+		@Override
+		public void agentChangeState(IAgent ag, String state)
+				throws RemoteException {}
+
+		@Override
+		public void agentNewMeassure(IAgent ag, IAgentMetric metric)
+				throws RemoteException {}
+
+	};
+
+	private void registerManagerCallbacks() {
+		IManagerService managerService = (IManagerService)
+			GlobalStorage.getInstance().get(IManagerService.class.toString());
+
+		if (managerService == null) {
+			Log.e("AgentAttributeView", "ManagerService is null, cant get manager callbacks");
+			return;
+		}
+		try {
+			managerService.registerApplication(msc);
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	private void unregisterManagerCallbacks() {
+		IManagerService managerService = (IManagerService)
+		GlobalStorage.getInstance().get(IManagerService.class.toString());
+
+		if (managerService == null) {
+			Log.e("AgentAttributeView", "ManagerService is null, cant unregister manager callbacks");
+			return;
+		}
+		try {
+			managerService.registerApplication(msc);
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
 
 	private ServiceConnection agentConnection = new ServiceConnection() {
 
@@ -61,6 +121,7 @@ public class AgentView extends Activity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 
 			agentService = IAgentService.Stub.asInterface(service);
+			GlobalStorage.getInstance().set(IAgentService.class.toString(), agentService);
 			isBound = true;
 			updateMDS();
 		}
@@ -68,6 +129,7 @@ public class AgentView extends Activity {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			System.err.println("Service disconnected ");
+			GlobalStorage.getInstance().del(IAgentService.class.toString());
 			agentService = null;
 			isBound = false;
 		}
@@ -93,11 +155,13 @@ public class AgentView extends Activity {
 		setContentView(R.layout.agentview);
 		bindService(new Intent(IAgentService.class.getName()), agentConnection, Context.BIND_AUTO_CREATE);
 		isBound = true;
+
+		registerManagerCallbacks();
 	}
 
 	@Override
 	protected void onDestroy() {
-
+		unregisterManagerCallbacks();
 		if (isBound) {
 			unbindService(agentConnection);
 			isBound = false;
@@ -185,26 +249,11 @@ public class AgentView extends Activity {
 				updateMDS();
 				break;
 			case R.id.MENU_ATTRIBUTES:
-				try {
-					ArrayList<IAttribute> attrs = new ArrayList<IAttribute>();
-					IError err = new IError();
-					agentService.getAttributes(agent, attrs, err);
-					if (err.getErrCode() != 0) {
-						System.err.println("Error getting attributes " + err.getErrMsg());
-						return super.onOptionsItemSelected(item);
-					}
-
-					Intent intent = new Intent (AgentView.this,AgentAttributeView.class);
-					Bundle extras = new Bundle();
-					extras.putParcelableArrayList("attributes", attrs);
-					intent.putExtras(extras);
-					startActivity(intent);
-				} catch (RemoteException e) {
-					System.err.println("RemoteException in agentService.getAttributes" + e.getMessage());
-					e.printStackTrace();
-					return super.onOptionsItemSelected(item);
-				}
-
+				Intent intent = new Intent (AgentView.this,AgentAttributeView.class);
+				Bundle extras = new Bundle();
+				extras.putParcelable("agent", agent);
+				intent.putExtras(extras);
+				startActivity(intent);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
