@@ -33,6 +33,8 @@ public class IMeasureAttribute implements Parcelable {
 
 	private int type; /* Id type */
 	private int code; /* value */
+	private String typeString;
+	private String codeString;
 
 	public static final Parcelable.Creator<IMeasureAttribute> CREATOR =
 			new Parcelable.Creator<IMeasureAttribute>() {
@@ -48,11 +50,15 @@ public class IMeasureAttribute implements Parcelable {
 	private IMeasureAttribute (Parcel in){
 		type = in.readInt();
 		code = in.readInt();
+		typeString = in.readString();
+		codeString = in.readString();
 	}
 
-	public IMeasureAttribute (int type, int code){
+	public IMeasureAttribute (int type, int code, String typeString, String codeString){
 		this.type = type;
 		this.code = code;
+		this.typeString = typeString;
+		this.codeString = codeString;
 	}
 
 
@@ -66,6 +72,8 @@ public class IMeasureAttribute implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(type);
 		dest.writeInt(code);
+		dest.writeString(typeString);
+		dest.writeString(codeString);
 	}
 
 	public int getAttrId () {
@@ -75,4 +83,13 @@ public class IMeasureAttribute implements Parcelable {
 	public int getCode () {
 		return this.code;
 	}
+
+	public String getAttrIdStr() {
+		return typeString;
+	}
+
+	public String getCodeStr() {
+		return this.codeString;
+	}
+
 }
