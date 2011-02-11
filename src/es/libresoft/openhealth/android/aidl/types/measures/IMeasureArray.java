@@ -33,7 +33,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class IMeasureArray extends IMeasure implements Parcelable {
-	List<IMeasure> list = new ArrayList<IMeasure>();
+	private List<IMeasure> list = new ArrayList<IMeasure>();
 
 	public static final Parcelable.Creator<IMeasureArray> CREATOR =
 								new Parcelable.Creator<IMeasureArray>() {
@@ -64,6 +64,7 @@ public class IMeasureArray extends IMeasure implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
 		dest.writeList(list);
 	}
 
