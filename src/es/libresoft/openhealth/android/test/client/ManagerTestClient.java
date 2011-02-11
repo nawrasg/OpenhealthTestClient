@@ -34,11 +34,6 @@ import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
-import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
-import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
-import es.libresoft.openhealth.android.aidl.types.measures.IMeasureArray;
-import es.libresoft.openhealth.android.aidl.types.measures.IMeasureAttribute;
-import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
 
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -48,7 +43,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,43 +138,7 @@ public class ManagerTestClient extends ListActivity {
 
 		@Override
 		public void agentNewMeassure(IAgent agent, IAgentMetric metric)
-				throws RemoteException {
-			System.out.println("TODO: received measure from: " + agent);
-			for (IMeasureAttribute parcel: metric.getAttributes()) {
-				IMeasureAttribute att = (IMeasureAttribute) parcel;
-				System.err.println("Att id:" + att.getAttrIdStr() + " Att code: " + att.getCodeStr());
-			}
-
-			for (IMeasure measure: metric.getMeasures()) {
-				if (measure instanceof IValueMeasure) {
-					IValueMeasure value = (IValueMeasure) measure;
-					try {
-						System.err.println("Measure type:" +  value.getMeasureType() + " Measure value: " + value.getFloatType());
-					} catch (Exception e) {
-
-					}
-				} else if (measure instanceof IDateMeasure) {
-					IDateMeasure date = (IDateMeasure) measure;
-					System.err.println("Measure type: " + date.getMeasureType() + " Measure value: " + date.getTimeStamp());
-				} else if (measure instanceof IMeasureArray) {
-					//TODO: this is so dirty, the only purpose is to show the unmarshall of arguments
-					IMeasureArray array = (IMeasureArray) measure;
-					for (Parcelable parcel2: array.getList()) {
-						if (parcel2 instanceof IValueMeasure) {
-							IValueMeasure value = (IValueMeasure) parcel2;
-							try {
-								System.err.println("Measure type:" +  value.getMeasureType() + " Measure value: " + value.getFloatType());
-							} catch (Exception e) {
-
-							}
-						} else if (parcel2 instanceof IDateMeasure) {
-							IDateMeasure date = (IDateMeasure) parcel2;
-							System.err.println("Measure type: " + date.getMeasureType() + " Measure value: " + date.getTimeStamp());
-						}
-					}
-				}
-			}
-		}
+				throws RemoteException {}
 
 	};
 

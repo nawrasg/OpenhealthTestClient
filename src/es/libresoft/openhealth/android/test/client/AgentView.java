@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 import ieee_11073.part_10101.Nomenclature;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -34,13 +37,17 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
@@ -50,12 +57,74 @@ import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
+import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
+import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
+import es.libresoft.openhealth.android.aidl.types.measures.IMeasureArray;
+import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
 
 public class AgentView extends Activity {
 
 	private IAgent agent = null;
 	private IAgentService agentService = null;
 	private boolean isBound = false;
+
+	private Vector<IMeasure> measures = new Vector<IMeasure>();
+	private Handler handler = new Handler();
+
+	protected void showMeasure(ArrayList<String> strs) {
+		if (strs.isEmpty()) return;
+
+		TableLayout tl = (TableLayout)findViewById(R.id.agentviewmeasuretable);
+		TableRow tr = new TableRow(this);
+		TextView tv = null;
+		String msg = "";
+		for (String str : strs) {
+			tv = new TextView(this);
+			tv.setText(str);
+			tr.addView(tv);
+			msg += "\t" + str;
+		}
+		tl.addView(tr);
+		Log.e("showMeasure", msg);
+	}
+
+	private void showMeasures(IMeasure m, ArrayList<String> strs) {
+		try {
+			if (m instanceof IMeasureArray) {
+				IMeasureArray ma = (IMeasureArray) m;
+				IMeasure measure;
+				strs.add("Ar");
+				for (Parcelable p : ma.getList()) {
+					measure = (IMeasure)p;
+					showMeasures(measure, strs);
+				}
+			}
+			if (m instanceof IValueMeasure) {
+				IValueMeasure value = (IValueMeasure) m;
+				strs.add(""+value.getMeasureType());
+				strs.add(""+value.getFloatType());
+				showMeasure(strs);
+			}
+			if (m instanceof IDateMeasure) {
+				IDateMeasure date = (IDateMeasure) m;
+				strs.add(""+date.getMeasureType());
+				strs.add(""+date.getTimeStamp());
+				showMeasure(strs);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Runnable doUpdateMeasureGUI = new Runnable(){
+		public void run(){
+			IMeasure m = null;
+			while (!measures.isEmpty()) {
+				m = measures.remove(0);
+				showMeasures(m, new ArrayList<String>());
+			}
+		}
+	};
 
 	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
 
@@ -79,7 +148,13 @@ public class AgentView extends Activity {
 
 		@Override
 		public void agentNewMeassure(IAgent ag, IAgentMetric metric)
-				throws RemoteException {}
+				throws RemoteException {
+			if (ag.getId() != agent.getId()) return;
+
+			for (IMeasure measure: metric.getMeasures())
+				measures.add(measure);
+			handler.post(doUpdateMeasureGUI);
+		}
 
 	};
 
