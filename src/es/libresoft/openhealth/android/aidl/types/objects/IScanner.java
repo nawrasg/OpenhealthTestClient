@@ -24,28 +24,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.aidl;
+package es.libresoft.openhealth.android.aidl.types.objects;
 
 import es.libresoft.openhealth.android.aidl.IAgent;
-import es.libresoft.openhealth.android.aidl.types.IAttribute;
-import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.objects.IDIMClass;
-import es.libresoft.openhealth.android.aidl.types.objects.INumeric;
-import es.libresoft.openhealth.android.aidl.types.objects.IScanner;
-import es.libresoft.openhealth.android.aidl.types.objects.IRT_SA;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-interface IAgentService {
-	void getAttributes(in IAgent agent, out List<IAttribute> attrs, out IError error);
-	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr, out IError error);
-	boolean updateMDS(in IAgent agent, out IError err);
+public class IScanner extends IDIMClass implements Parcelable {
 
-	void getNumeric(in IAgent agent, out List<INumeric> nums, out IError error);
+	public static final Parcelable.Creator<IScanner> CREATOR =
+			new Parcelable.Creator<IScanner>() {
+		public IScanner createFromParcel(Parcel in) {
+			return new IScanner(in);
+		}
 
-	void getScanner(in IAgent agent, out List<IScanner> scanners, out IError error);
+		public IScanner[] newArray(int size) {
+			return new IScanner[size];
+		}
+	};
 
-	void getRT_SA(in IAgent agent, out List<IRT_SA> rts, out IError error);
+	private IScanner (Parcel in) {
+		super(in);
+	}
 
-	void getObjectAttrs(in IAgent agent, in IDIMClass obj, out List<IAttribute> attrs, out IError error);
+	public IScanner(int handle, IAgent agent) {
+		super(handle, agent);
+	}
 
-	void connect(in IAgent agent);
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+	}
+
 }
