@@ -24,19 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.aidl;
+package es.libresoft.openhealth.android.aidl.types.objects;
 
-import es.libresoft.openhealth.android.aidl.IAgent;
-import es.libresoft.openhealth.android.aidl.types.IAttribute;
-import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.objects.INumeric;
-
-interface IAgentService {
-	void getAttributes(in IAgent agent, out List<IAttribute> attrs, out IError error);
-	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr, out IError error);
-	boolean updateMDS(in IAgent agent, out IError err);
-
-	void getNumeric(in IAgent agent, out List<INumeric> nums, out IError error);
-
-	void connect(in IAgent agent);
-}
+parcelable INumeric;
