@@ -75,4 +75,9 @@ public class IAttrValMap implements Parcelable {
 		this.values = values;
 	}
 
+	@Override
+	public String toString() {
+		return "IAttrValMap [values=" + values + "]";
+	}
+
 }

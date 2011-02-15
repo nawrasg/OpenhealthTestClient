@@ -119,4 +119,10 @@ public class IAttrValMapEntry implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "IAttrValMapEntry [attributeId=" + attributeId
+				+ ", attributeLen=" + attributeLen + "]";
+	}
+
 }

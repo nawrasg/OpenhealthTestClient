@@ -123,4 +123,9 @@ public class ITYPE implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "ITYPE [code=" + code + ", partition=" + partition + "]";
+	}
+
 }

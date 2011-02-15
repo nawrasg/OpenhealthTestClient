@@ -90,4 +90,10 @@ public class IBasicNuObsValue implements Parcelable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "IBasicNuObsValue [value=" + value + "]";
+	}
+
 }

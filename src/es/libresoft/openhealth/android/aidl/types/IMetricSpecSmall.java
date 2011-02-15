@@ -99,4 +99,9 @@ public class IMetricSpecSmall implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "IMetricSpecSmall [bits=" + bits + "]";
+	}
+
 }
