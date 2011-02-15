@@ -40,9 +40,7 @@ interface IAgentService {
 	boolean updateMDS(in IAgent agent, out IError err);
 
 	void getNumeric(in IAgent agent, out List<INumeric> nums, out IError error);
-
 	void getScanner(in IAgent agent, out List<IScanner> scanners, out IError error);
-
 	void getRT_SA(in IAgent agent, out List<IRT_SA> rts, out IError error);
 
 	void getObjectAttrs(in IAgent agent, in IDIMClass obj, out List<IAttribute> attrs, out IError error);
