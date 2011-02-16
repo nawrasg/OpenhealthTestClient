@@ -105,7 +105,7 @@ public class ManagerTestClient extends ListActivity {
 			OnClickListener ocl = new ItemClickListener(agent);
 
 			tv.setOnClickListener(ocl);
-			tv.setText(agent.toString());
+			tv.setText(agent.getTransportDesc());
 			return tv;
 		}
 	};
