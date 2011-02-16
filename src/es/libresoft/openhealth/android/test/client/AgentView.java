@@ -54,6 +54,7 @@ import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
+import es.libresoft.openhealth.android.aidl.IState;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
@@ -143,7 +144,7 @@ public class AgentView extends Activity {
 		public void error(IAgent ag, IError error) throws RemoteException {}
 
 		@Override
-		public void agentChangeState(IAgent ag, String state)
+		public void agentChangeState(IAgent ag, IState state)
 				throws RemoteException {}
 
 		@Override

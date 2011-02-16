@@ -29,6 +29,7 @@ package es.libresoft.openhealth.android.aidl;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
+import es.libresoft.openhealth.android.aidl.IState;
 
 oneway interface IManagerClientCallback {
 	/**
@@ -44,7 +45,7 @@ oneway interface IManagerClientCallback {
 	/**
 	 * Called when the state of the agent changes.
 	 */
-	void agentChangeState(in IAgent agent, String state);
+	void agentChangeState(in IAgent agent, in IState state);
 
 	/**
 	 * Notifies asynchronous error in the agent

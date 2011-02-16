@@ -32,6 +32,7 @@ import java.util.Vector;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
+import es.libresoft.openhealth.android.aidl.IState;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 
@@ -131,9 +132,9 @@ public class ManagerTestClient extends ListActivity {
 		}
 
 		@Override
-		public void agentChangeState(IAgent agent, String state)
+		public void agentChangeState(IAgent agent, IState state)
 				throws RemoteException {
-			System.out.println("Agent " + agent.getId() + " Change to " + state);
+			System.out.println("Agent " + agent.getId() + " Change to " + state.getStateName());
 		}
 
 		@Override
