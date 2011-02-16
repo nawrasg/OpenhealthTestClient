@@ -33,12 +33,13 @@ import es.libresoft.openhealth.android.aidl.types.objects.IDIMClass;
 import es.libresoft.openhealth.android.aidl.types.objects.INumeric;
 import es.libresoft.openhealth.android.aidl.types.objects.IScanner;
 import es.libresoft.openhealth.android.aidl.types.objects.IRT_SA;
+import es.libresoft.openhealth.android.aidl.IState;
 
 interface IAgentService {
 	void getAttributes(in IAgent agent, out List<IAttribute> attrs, out IError error);
 	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr, out IError error);
 	boolean updateMDS(in IAgent agent, out IError err);
-	void getState(in IAgent agent, out String[] state, out IError err);
+	void getState(in IAgent agent, out IState state, out IError err);
 
 	void getNumeric(in IAgent agent, out List<INumeric> nums, out IError error);
 	void getScanner(in IAgent agent, out List<IScanner> scanners, out IError error);
