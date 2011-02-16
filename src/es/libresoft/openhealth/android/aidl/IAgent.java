@@ -31,6 +31,7 @@ import android.os.Parcelable;
 
 public class IAgent implements Parcelable {
 	private int id;
+	private String transportDesc;
 
 	public static final Parcelable.Creator<IAgent> CREATOR =
 			new Parcelable.Creator<IAgent>() {
@@ -49,6 +50,7 @@ public class IAgent implements Parcelable {
 
 	public void readFromParcel(Parcel in) {
 		id = in.readInt();
+		transportDesc = in.readString();
 	}
 
 	@Override
@@ -59,13 +61,15 @@ public class IAgent implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
+		dest.writeString(transportDesc);
 	}
 
 	public IAgent () {
 	}
 
-	public IAgent (int id) {
+	public IAgent (int id, String transportDesc) {
 		this.id = id;
+		this.transportDesc = transportDesc;
 	}
 
 	public boolean equals(Object o) {
@@ -79,6 +83,10 @@ public class IAgent implements Parcelable {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getTransportDesc() {
+		return transportDesc;
 	}
 }
 
