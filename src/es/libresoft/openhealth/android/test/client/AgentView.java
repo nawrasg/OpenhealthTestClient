@@ -331,6 +331,17 @@ public class AgentView extends Activity {
 				intent.putExtras(extras);
 				startActivity(intent);
 				break;
+			case R.id.MENU_DISCONNECT:
+				if (agentService != null) {
+					try {
+						agentService.disconnect(agent);
+					} catch (RemoteException e) {
+						Toast t;
+						t = Toast.makeText(getApplicationContext(), "Can't connect to the remote Service", Toast.LENGTH_SHORT);
+						t.show();
+					}
+				}
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
