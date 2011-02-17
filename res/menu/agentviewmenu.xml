@@ -4,5 +4,6 @@
           android:icon="@drawable/update" />
     <item android:id="@+id/MENU_ATTRIBUTES"
           android:icon="@drawable/search" />
--->
+    <item android:id="@+id/MENU_DISCONNECT"
+          android:icon="@drawable/release" />
 </menu>

@@ -334,7 +334,12 @@ public class AgentView extends Activity {
 			case R.id.MENU_DISCONNECT:
 				if (agentService != null) {
 					try {
-						agentService.disconnect(agent);
+						IError error = new IError();
+						if (!agentService.disconnect(agent, error)) {
+							Toast t;
+							t = Toast.makeText(getApplicationContext(), "Error disconnecting: " + error.getErrMsg(), Toast.LENGTH_SHORT);
+							t.show();
+						}
 					} catch (RemoteException e) {
 						Toast t;
 						t = Toast.makeText(getApplicationContext(), "Can't connect to the remote Service", Toast.LENGTH_SHORT);
