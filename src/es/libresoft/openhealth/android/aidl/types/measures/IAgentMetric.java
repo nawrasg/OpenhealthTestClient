@@ -29,12 +29,14 @@ package es.libresoft.openhealth.android.aidl.types.measures;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.libresoft.openhealth.android.aidl.types.IAttribute;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class IAgentMetric implements Parcelable {
 
-	public ArrayList<IMeasureAttribute> attributes = new ArrayList<IMeasureAttribute>();
+	public ArrayList<IAttribute> attributes = new ArrayList<IAttribute>();
 	public ArrayList<IMeasure> measures = new ArrayList<IMeasure>();
 
 	public static final Parcelable.Creator<IAgentMetric> CREATOR =
@@ -70,11 +72,11 @@ public class IAgentMetric implements Parcelable {
 		measures.add(obj);
 	}
 
-	public void addAttribute(IMeasureAttribute obj) {
+	public void addAttribute(IAttribute obj) {
 		attributes.add(obj);
 	}
 
-	public List<IMeasureAttribute> getAttributes(){
+	public List<IAttribute> getAttributes(){
 		return attributes;
 	}
 
