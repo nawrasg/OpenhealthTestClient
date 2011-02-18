@@ -32,6 +32,7 @@ import android.os.Parcelable;
 public class ITYPE implements Parcelable {
 	private INomPartition partition;
 	private IOID_Type code;
+	private String repString;
 
 	public static final Parcelable.Creator<ITYPE> CREATOR =
 			new Parcelable.Creator<ITYPE>() {
@@ -48,15 +49,17 @@ public class ITYPE implements Parcelable {
 
 	}
 
-	public ITYPE (INomPartition partition, IOID_Type code) {
+	public ITYPE (INomPartition partition, IOID_Type code, String repString) {
 		this.partition = partition;
 		this.code = code;
+		this.repString = repString;
 	}
 
 	private ITYPE (Parcel in) {
 		ClassLoader cl = this.getClass().getClassLoader();
 		partition = in.readParcelable(cl);
 		code = in.readParcelable(cl);
+		repString = in.readString();
 	}
 
 	@Override
@@ -68,6 +71,7 @@ public class ITYPE implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(partition, 0);
 		dest.writeParcelable(code, 0);
+		dest.writeString(repString);
 	}
 
 	public INomPartition getPartition() {
@@ -84,6 +88,10 @@ public class ITYPE implements Parcelable {
 
 	public void setCode(IOID_Type code) {
 		this.code = code;
+	}
+
+	public void setRepString(String repString) {
+		this.repString = repString;
 	}
 
 	@Override
@@ -125,7 +133,7 @@ public class ITYPE implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "ITYPE [code=" + code + ", partition=" + partition + "]";
+		return repString;
 	}
 
 }
