@@ -73,60 +73,132 @@ public class AgentView extends Activity {
 	private IPMStoreService pmStoreService = null;
 	private boolean isBound = false;
 
-	private Vector<IMeasure> measures = new Vector<IMeasure>();
+	private Vector<IAgentMetric> metrics = new Vector<IAgentMetric>();
 	private Handler handler = new Handler();
 
-	protected void showMeasure(ArrayList<String> strs) {
-		if (strs.isEmpty()) return;
 
-		TableLayout tl = (TableLayout)findViewById(R.id.agentviewmeasuretable);
+	private TableRow getShowRowSeparator() {
+		//TODO: Use a separator not String
+		TableRow tr = new TableRow(this);
+		TextView tv = new TextView(this);
+		tv.setText("------------");
+		tr.addView(tv);
+		return tr;
+	}
+
+	private TableRow getShowRow(String str) {
+		TableRow tr = new TableRow(this);
+		TextView tv = new TextView(this);
+		tv.setText(str);
+		tr.addView(tv);
+		return tr;
+	}
+
+	private TableRow getShowRow(ArrayList<String> strs) {
 		TableRow tr = new TableRow(this);
 		TextView tv = null;
-		String msg = "";
-		for (String str : strs) {
+		for (String str: strs) {
 			tv = new TextView(this);
 			tv.setText(str);
 			tr.addView(tv);
-			msg += "\t" + str;
 		}
-		tl.addView(tr);
-		Log.e("showMeasure", msg);
+		return tr;
 	}
 
-	private void showMeasures(IMeasure m, ArrayList<String> strs) {
-		try {
-			if (m instanceof IMeasureArray) {
-				IMeasureArray ma = (IMeasureArray) m;
-				IMeasure measure;
-				strs.add("Ar");
-				for (Parcelable p : ma.getList()) {
-					measure = (IMeasure)p;
-					showMeasures(measure, strs);
-				}
-			}
-			if (m instanceof IValueMeasure) {
-				IValueMeasure value = (IValueMeasure) m;
-				strs.add(""+value.getMeasureType());
-				strs.add(""+value.getFloatType());
-				showMeasure(strs);
-			}
-			if (m instanceof IDateMeasure) {
-				IDateMeasure date = (IDateMeasure) m;
-				strs.add(""+date.getMeasureType());
-				strs.add(""+date.getTimeStamp());
-				showMeasure(strs);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private void showRow(TableRow tr) {
+		TableLayout tl = (TableLayout)findViewById(R.id.agentviewmeasuretable);
+		tl.addView(tr,0);
 	}
 
-	private Runnable doUpdateMeasureGUI = new Runnable(){
+	private void showRow(ArrayList<TableRow> rows) {
+		TableLayout tl = (TableLayout)findViewById(R.id.agentviewmeasuretable);
+		while (!rows.isEmpty())
+			tl.addView(rows.remove(rows.size()-1),0);
+	}
+
+	private void showUnknownAgentMetric(IAgentMetric am) {
+		String str = null;
+		ArrayList<TableRow> rows = new ArrayList<TableRow>();
+
+		//add attributes
+		for (IAttribute att: am.getAttributes()) {
+			str = "At[" + att.getAttrId() + "]:" + att.getAttr();
+			rows.add(getShowRow(str));
+		}
+
+		//add measures
+		for (IMeasure me: am.getMeasures()) {
+			str = "Me[" + me.getMeasureType() + "]:" + me;
+			rows.add(getShowRow(str));
+		}
+
+		//add stop separator
+		rows.add(getShowRowSeparator());
+
+		//add rows to tablelayout in inverse order
+		showRow(rows);
+	}
+
+	private boolean showSimpleAgentMetric(IAgentMetric am) {
+		IAttribute typeMeasure = null;
+		IAttribute unit = null;
+		IMeasure value = null;
+		IMeasure timeStamp = null;
+
+		getAgentMetricAttribute(am, Nomenclature.MDC_ATTR_ID_TYPE, typeMeasure);
+		getAgentMetricAttribute(am, Nomenclature.MDC_ATTR_UNIT_CODE, unit);
+
+		getAgentMetricMeasure(am, Nomenclature.MDC_ATTR_NU_VAL_OBS_BASIC, value);
+		getAgentMetricMeasure(am, Nomenclature.MDC_ATTR_TIME_STAMP_ABS, timeStamp);
+
+		if (typeMeasure == null ||
+			unit == null ||
+			value == null
+		)
+			return false;
+
+		showRow(getShowRowSeparator());
+		if (timeStamp != null)
+			showRow(getShowRow(""+timeStamp));
+		ArrayList<String> strs = new ArrayList<String>(2);
+		strs.add(0, ""+value);
+		strs.add(1, unit.getAttrIdStr());
+		showRow(getShowRow(strs));
+
+		return true;
+	}
+
+	private Boolean getAgentMetricAttribute(IAgentMetric am, int attrId, IAttribute attribute) {
+		for (IAttribute att: am.getAttributes()) {
+			if (att.getAttrId() == attrId) {
+				attribute = att;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Boolean getAgentMetricMeasure(IAgentMetric am, int measureId, IMeasure measure) {
+		for (IMeasure me: am.getMeasures()) {
+			if (me.getMeasureType() == measureId) {
+				measure = me;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void showAgentMetric(IAgentMetric am) {
+		if (showSimpleAgentMetric(am)) return;
+		showUnknownAgentMetric(am);
+	}
+
+	private Runnable doUpdateAgentMetricGUI = new Runnable(){
 		public void run(){
-			IMeasure m = null;
-			while (!measures.isEmpty()) {
-				m = measures.remove(0);
-				showMeasures(m, new ArrayList<String>());
+			IAgentMetric am = null;
+			while (!metrics.isEmpty()) {
+				am = metrics.remove(0);
+				showAgentMetric(am);
 			}
 		}
 	};
@@ -154,11 +226,10 @@ public class AgentView extends Activity {
 		@Override
 		public void agentNewMeassure(IAgent ag, IAgentMetric metric)
 				throws RemoteException {
-			if (ag.getId() != agent.getId()) return;
+			if (ag.getId() != agent.getId() || metric == null) return;
 
-			for (IMeasure measure: metric.getMeasures())
-				measures.add(measure);
-			handler.post(doUpdateMeasureGUI);
+			metrics.add(metric);
+			handler.post(doUpdateAgentMetricGUI);
 		}
 
 	};
