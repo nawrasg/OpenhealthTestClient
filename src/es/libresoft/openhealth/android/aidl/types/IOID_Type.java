@@ -95,6 +95,6 @@ public class IOID_Type implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "0x" + Integer.toHexString(type);
+		return repString;
 	}
 }
