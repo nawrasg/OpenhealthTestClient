@@ -97,4 +97,9 @@ public class IMeasureArray extends IMeasure implements Parcelable {
 		return list;
 	}
 
+	@Override
+	public String toString() {
+		return "IMeasureArray [list=" + list + "]";
+	}
+
 }
