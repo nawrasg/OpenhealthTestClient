@@ -33,8 +33,10 @@ import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.IState;
+import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
+import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
 
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -139,7 +141,16 @@ public class ManagerTestClient extends ListActivity {
 
 		@Override
 		public void agentNewMeassure(IAgent agent, IAgentMetric metric)
-				throws RemoteException {}
+				throws RemoteException {
+			System.err.println("Measure received for agent: " + agent.getTransportDesc());
+			for (IAttribute att: metric.getAttributes()) {
+				System.err.println("Att: " + att.getAttrId() + ": " + att.getAttr());
+			}
+
+			for (IMeasure me: metric.getMeasures()) {
+				System.err.println("Measure: type: " + me.getMeasureType() + " value: " + me);
+			}
+		}
 
 	};
 
