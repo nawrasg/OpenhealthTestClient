@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package es.libresoft.openhealth.android.test.client;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import ieee_11073.part_10101.Nomenclature;
@@ -54,6 +55,7 @@ import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
 import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
+import es.libresoft.openhealth.android.aidl.IPMStoreService;
 import es.libresoft.openhealth.android.aidl.IState;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
@@ -62,11 +64,13 @@ import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasureArray;
 import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
+import es.libresoft.openhealth.android.aidl.types.objects.IPM_Store;
 
 public class AgentView extends Activity {
 
 	private IAgent agent = null;
 	private IAgentService agentService = null;
+	private IPMStoreService pmStoreService = null;
 	private boolean isBound = false;
 
 	private Vector<IMeasure> measures = new Vector<IMeasure>();
@@ -211,6 +215,20 @@ public class AgentView extends Activity {
 		}
 	};
 
+	private ServiceConnection pmStoreConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			pmStoreService = IPMStoreService.Stub.asInterface(service);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			System.err.println("Service pmStore disconnected ");
+			pmStoreService = null;
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -230,6 +248,7 @@ public class AgentView extends Activity {
 
 		setContentView(R.layout.agentview);
 		bindService(new Intent(IAgentService.class.getName()), agentConnection, Context.BIND_AUTO_CREATE);
+		bindService(new Intent(IPMStoreService.class.getName()), pmStoreConnection, Context.BIND_AUTO_CREATE);
 		isBound = true;
 
 		registerManagerCallbacks();
@@ -241,6 +260,9 @@ public class AgentView extends Activity {
 		if (isBound) {
 			unbindService(agentConnection);
 			isBound = false;
+		}
+		if (pmStoreConnection != null) {
+			unbindService(pmStoreConnection);
 		}
 
 		super.onDestroy();
@@ -310,7 +332,51 @@ public class AgentView extends Activity {
 		}
 		
 	}
-	
+
+	private void updatePMStore() {
+		if (agentService == null || pmStoreService == null)
+			return;
+
+		try {
+			AsyncTask<IAgent, Integer, Boolean> at = new AsyncTask<IAgent, Integer, Boolean>() {
+				//TODO: Check more deeply if race condition can happen
+				IError err = new IError();
+
+				protected Boolean doInBackground(IAgent... agent) {
+					try {
+						List<IPM_Store> nums = new ArrayList<IPM_Store>();
+						agentService.getPM_Store(agent[0], nums, err);
+						if (nums.isEmpty()) {
+							err.setErrCode(0);
+							err.setErrMsg("No PMSTORE");
+							return false;
+						}
+						return pmStoreService.updatePMStore(nums.get(0), err);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+					return false;
+				}
+
+				private void show(String msg) {
+					Toast t;
+
+					t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+					t.setGravity(Gravity.CENTER, 0, 0);
+					t.show();
+				}
+
+				protected void onPostExecute(Boolean result) {
+					show("Update PMSTORE, err " + err.getErrCode() + " " + err.getErrMsg());
+				}
+			};
+			at.execute(agent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
@@ -346,6 +412,9 @@ public class AgentView extends Activity {
 						t.show();
 					}
 				}
+				break;
+			case R.id.MENU_UPDATEPMSTORE:
+				updatePMStore();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
