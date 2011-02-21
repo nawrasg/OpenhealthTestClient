@@ -31,6 +31,7 @@ import android.os.Parcelable;
 
 public class IOID_Type implements Parcelable {
 	private int type;
+	private String repString;
 
 	public int getType() {
 		return type;
@@ -38,6 +39,14 @@ public class IOID_Type implements Parcelable {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public String getRepString() {
+		return repString;
+	}
+
+	public void setRepString(String repString) {
+		this.repString = repString;
 	}
 
 	public static final Parcelable.Creator<IOID_Type> CREATOR =
@@ -55,12 +64,14 @@ public class IOID_Type implements Parcelable {
 
 	}
 
-	public IOID_Type (int type) {
+	public IOID_Type (int type, String repString) {
 		this.type = type;
+		this.repString = repString;
 	}
 
 	private IOID_Type (Parcel in) {
 		type = in.readInt();
+		repString = in.readString();
 	}
 
 	@Override
@@ -71,6 +82,7 @@ public class IOID_Type implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(type);
+		dest.writeString(repString);
 	}
 
 	public boolean equals(Object o) {
