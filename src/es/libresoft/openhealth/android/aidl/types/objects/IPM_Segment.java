@@ -66,4 +66,7 @@ public class IPM_Segment extends IDIMClass implements Parcelable {
 		dest.writeParcelable(store, 0);
 	}
 
+	public IPM_Store getPMStore() {
+		return store;
+	}
 }
