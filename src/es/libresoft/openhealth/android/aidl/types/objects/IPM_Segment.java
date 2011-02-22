@@ -24,14 +24,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.aidl;
+package es.libresoft.openhealth.android.aidl.types.objects;
 
-import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.objects.IPM_Store;
-import es.libresoft.openhealth.android.aidl.types.objects.IPM_Segment;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-interface IPMStoreService {
-	boolean updatePMStore(in IPM_Store store, out IError err);
+public class IPM_Segment extends IDIMClass implements Parcelable {
 
-	void getAllPMSegments(in IPM_Store store, out List<IPM_Segment> segments, out IError err);
+	private IPM_Store store;
+
+	public static final Parcelable.Creator<IPM_Segment> CREATOR =
+			new Parcelable.Creator<IPM_Segment>() {
+		public IPM_Segment createFromParcel(Parcel in) {
+			return new IPM_Segment(in);
+		}
+
+		public IPM_Segment[] newArray(int size) {
+			return new IPM_Segment[size];
+		}
+	};
+
+	private IPM_Segment (Parcel in) {
+		super(in);
+		ClassLoader cl = this.getClass().getClassLoader();
+		store = in.readParcelable(cl);
+	}
+
+	public IPM_Segment(int handle, IPM_Store store) {
+		super(handle, store.getAgent());
+		this.store = store;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeParcelable(store, 0);
+	}
+
 }

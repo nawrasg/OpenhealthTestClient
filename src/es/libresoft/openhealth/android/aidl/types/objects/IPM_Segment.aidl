@@ -3,6 +3,7 @@ Copyright (C) 2008-2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
 Author: Santiago Carot-Nemesio <scarot@libresoft.es>
+Author: Jorge Fernández-González <jfernandez@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -24,14 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.aidl;
+package es.libresoft.openhealth.android.aidl.types.objects;
 
-import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.objects.IPM_Store;
-import es.libresoft.openhealth.android.aidl.types.objects.IPM_Segment;
-
-interface IPMStoreService {
-	boolean updatePMStore(in IPM_Store store, out IError err);
-
-	void getAllPMSegments(in IPM_Store store, out List<IPM_Segment> segments, out IError err);
-}
+parcelable IPM_Segment;
