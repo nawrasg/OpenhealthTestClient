@@ -34,4 +34,6 @@ interface IPMStoreService {
 	boolean updatePMStore(in IPM_Store store, out IError err);
 
 	void getAllPMSegments(in IPM_Store store, out List<IPM_Segment> segments, out IError err);
+
+	boolean startPMSegmentTransfer(in IPM_Segment segment, out IError err);
 }
