@@ -52,6 +52,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ManagerTestClient extends ListActivity {
 
@@ -130,7 +131,8 @@ public class ManagerTestClient extends ListActivity {
 
 		@Override
 		public void error(IAgent agent, IError error) throws RemoteException {
-			System.out.println("TODO: Notify the error in the GUI");
+			Toast.makeText(getApplicationContext(),
+					error.getErrMsg(), Toast.LENGTH_LONG).show();
 		}
 
 		@Override
