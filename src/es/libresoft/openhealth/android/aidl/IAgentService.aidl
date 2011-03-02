@@ -49,7 +49,7 @@ interface IAgentService {
 	void getEnumeration(in IAgent agent, out List<IEnumeration> nums, out IError error);
 	void getPM_Store(in IAgent agent, out List<IPM_Store> nums, out IError error);
 
-	void getObjectAttrs(in IAgent agent, in IDIMClass obj, out List<IAttribute> attrs, out IError error);
+	void getObjectAttrs(in IDIMClass obj, out List<IAttribute> attrs, out IError error);
 
 	void connect(in IAgent agent);
 	boolean disconnect(in IAgent agent, out IError err);
