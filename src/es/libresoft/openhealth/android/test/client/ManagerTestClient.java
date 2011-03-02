@@ -46,6 +46,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,8 +132,14 @@ public class ManagerTestClient extends ListActivity {
 
 		@Override
 		public void error(IAgent agent, IError error) throws RemoteException {
-			Toast.makeText(getApplicationContext(),
-					error.getErrMsg(), Toast.LENGTH_LONG).show();
+			final IError err = error;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(getApplicationContext(),
+							"Error " + err.getErrCode() + ": " + err.getErrMsg(), Toast.LENGTH_LONG).show();
+				}
+			});
 		}
 
 		@Override
