@@ -1,9 +1,7 @@
 /*
 Copyright (C) 2008-2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
-Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
 Author: Santiago Carot-Nemesio <scarot@libresoft.es>
-Author: Jorge Fernandez Gonzalez <jfernandez@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -25,6 +23,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package es.libresoft.openhealth.android.aidl.types;
+package es.libresoft.openhealth.android.aidl.types.objects;
 
-parcelable ISupplementalTypeList;
+import es.libresoft.openhealth.android.aidl.IAgent;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class IMDS extends IDIMClass implements Parcelable {
+
+	public static final Parcelable.Creator<IMDS> CREATOR =
+		new Parcelable.Creator<IMDS>() {
+		public IMDS createFromParcel(Parcel in) {
+			return new IMDS(in);
+		}
+
+		public IMDS[] newArray(int size) {
+			return new IMDS[size];
+		}
+	};
+
+	private IMDS (Parcel in) {
+		super(in);
+	}
+
+	public IMDS() {
+		super();
+	}
+
+	public IMDS(int handle, IAgent agent) {
+		super(handle, agent);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+}

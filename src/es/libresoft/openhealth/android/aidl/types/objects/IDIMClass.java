@@ -45,6 +45,9 @@ public class IDIMClass implements Parcelable {
 		}
 	};
 
+	protected IDIMClass () {
+	}
+
 	protected IDIMClass (Parcel in) {
 		ClassLoader cl = this.getClass().getClassLoader();
 		handle = in.readInt();
@@ -56,9 +59,21 @@ public class IDIMClass implements Parcelable {
 		this.agent = agent;
 	}
 
+	public void copy(IDIMClass dim) {
+		this.handle = dim.handle;
+		this.agent = dim.agent;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
+	}
+
+	public void readFromParcel(Parcel in) {
+		ClassLoader cl = IAgent.class.getClassLoader();
+		//ClassLoader cl = this.getClass().getClassLoader();
+		handle = in.readInt();
+		agent = in.readParcelable(cl);
 	}
 
 	@Override
