@@ -26,11 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import ieee_11073.part_10101.Nomenclature;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import ieee_11073.part_10101.Nomenclature;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -40,7 +41,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,10 +60,8 @@ import es.libresoft.openhealth.android.aidl.IState;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
-import es.libresoft.openhealth.android.aidl.types.measures.IDateMeasure;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
-import es.libresoft.openhealth.android.aidl.types.measures.IMeasureArray;
-import es.libresoft.openhealth.android.aidl.types.measures.IValueMeasure;
+import es.libresoft.openhealth.android.aidl.types.objects.IMDS;
 import es.libresoft.openhealth.android.aidl.types.objects.IPM_Store;
 
 public class AgentView extends Activity {
@@ -362,10 +360,7 @@ public class AgentView extends Activity {
 				}
 				
 				protected void onPostExecute(Boolean result) {
-					IAttribute attrHandle = new IAttribute();
-					IAttribute attrIdModel = new IAttribute();
-					IAttribute attrSysId = new IAttribute();
-					IAttribute attrDevConfigId = new IAttribute();
+					ArrayList<IAttribute> attrs = new ArrayList<IAttribute>();
 
 					if (!result) {
 						show("MDS not updated, err: " + err.getErrMsg());
@@ -373,13 +368,20 @@ public class AgentView extends Activity {
 					}
 
 					try {
-						agentService.getAttribute(agent, Nomenclature.MDC_ATTR_ID_HANDLE, attrHandle, err);
-						if (err.getErrCode() == 0)
-							agentService.getAttribute(agent, Nomenclature.MDC_ATTR_ID_MODEL, attrIdModel, err);
-						if (err.getErrCode() == 0)
-							agentService.getAttribute(agent, Nomenclature.MDC_ATTR_SYS_ID, attrSysId, err);
-						if (err.getErrCode() == 0)
-							agentService.getAttribute(agent, Nomenclature.MDC_ATTR_DEV_CONFIG_ID, attrDevConfigId, err);
+						IMDS mds = new IMDS();
+						agentService.getMDS(agent, mds, err);
+						if (err.getErrCode() != 0) {
+							show("Error getting MDS " + err.getErrMsg());
+							System.err.println("Error getting MDS " + err.getErrMsg());
+							return;
+						}
+
+						agentService.getObjectAttrs(mds, attrs, err);
+						if (err.getErrCode() != 0) {
+							show("Error getting attributes " + err.getErrMsg());
+							System.err.println("Error getting attributes " + err.getErrMsg());
+							return;
+						}
 					} catch (RemoteException e) {
 						show("Error getting attr: remote exception");
 						e.printStackTrace();
@@ -389,10 +391,28 @@ public class AgentView extends Activity {
 						return;
 					}
 
-					((TextView)findViewById(R.id.handle)).setText(attrHandle.getAttr().toString());
-					((TextView)findViewById(R.id.systemModel)).setText(attrIdModel.getAttr().toString());
-					((TextView)findViewById(R.id.systemId)).setText(attrSysId.getAttr().toString());
-					((TextView)findViewById(R.id.devConfigurationId)).setText(attrDevConfigId.getAttr().toString());
+					for (IAttribute attr : attrs) {
+						switch (attr.getAttrId()) {
+						case Nomenclature.MDC_ATTR_ID_HANDLE:
+							((TextView) findViewById(R.id.handle)).setText(attr
+									.getAttr().toString());
+							break;
+						case Nomenclature.MDC_ATTR_ID_MODEL:
+							((TextView) findViewById(R.id.systemModel))
+									.setText(attr.getAttr().toString());
+							break;
+						case Nomenclature.MDC_ATTR_SYS_ID:
+							((TextView) findViewById(R.id.systemId))
+									.setText(attr.getAttr().toString());
+							break;
+						case Nomenclature.MDC_ATTR_DEV_CONFIG_ID:
+							((TextView) findViewById(R.id.devConfigurationId))
+									.setText(attr.getAttr().toString());
+							break;
+						default:
+							break;
+						}
+					}
 
 					show("MDS updated");
 				}

@@ -39,8 +39,6 @@ import es.libresoft.openhealth.android.aidl.types.objects.IPM_Store;
 import es.libresoft.openhealth.android.aidl.IState;
 
 interface IAgentService {
-	void getAttributes(in IAgent agent, out List<IAttribute> attrs, out IError error);
-	void getAttribute(in IAgent agent, in int attrId, out IAttribute attr, out IError error);
 	boolean updateMDS(in IAgent agent, out IError err);
 	void getState(in IAgent agent, out IState state, out IError err);
 
