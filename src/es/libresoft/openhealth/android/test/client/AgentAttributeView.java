@@ -36,6 +36,7 @@ import es.libresoft.openhealth.android.aidl.IState;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
+import es.libresoft.openhealth.android.aidl.types.objects.IMDS;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -121,7 +122,16 @@ public class AgentAttributeView extends Activity {
 				GlobalStorage.getInstance().get(IAgentService.class.toString());
 			if (agentService == null) return false;
 
-			agentService.getAttributes(agent, attrs, err);
+			IMDS mds = new IMDS();
+			agentService.getMDS(agent, mds, err);
+			if (err.getErrCode() != 0) {
+				show("Error getting MDS " + err.getErrMsg());
+				System.err.println("Error getting MDS " + err.getErrMsg());
+				return false;
+			}
+
+			agentService.getObjectAttrs(mds, attrs, err);
+
 			if (err.getErrCode() != 0) {
 				show("Error getting attributes " + err.getErrMsg());
 				System.err.println("Error getting attributes " + err.getErrMsg());

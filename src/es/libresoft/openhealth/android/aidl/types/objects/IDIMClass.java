@@ -71,7 +71,6 @@ public class IDIMClass implements Parcelable {
 
 	public void readFromParcel(Parcel in) {
 		ClassLoader cl = IAgent.class.getClassLoader();
-		//ClassLoader cl = this.getClass().getClassLoader();
 		handle = in.readInt();
 		agent = in.readParcelable(cl);
 	}
