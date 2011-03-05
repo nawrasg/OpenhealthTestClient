@@ -26,30 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
-import ieee_11073.part_10101.Nomenclature;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import android.app.Activity;
+import android.app.TabActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.TabHost;
 import android.widget.Toast;
 import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
@@ -57,20 +43,157 @@ import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
 import es.libresoft.openhealth.android.aidl.IManagerService;
 import es.libresoft.openhealth.android.aidl.IPMStoreService;
 import es.libresoft.openhealth.android.aidl.IState;
-import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
-import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
-import es.libresoft.openhealth.android.aidl.types.objects.IMDS;
-import es.libresoft.openhealth.android.aidl.types.objects.IPM_Store;
 
-public class AgentView extends Activity {
-
+public class AgentView extends TabActivity {
 	private IAgent agent = null;
 	private IAgentService agentService = null;
 	private IPMStoreService pmStoreService = null;
-	private boolean isBound = false;
 
+	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
+
+		@Override
+		public void agentPlugged(IAgent ag) throws RemoteException {}
+
+		@Override
+		public void agentUnplugged(IAgent ag) throws RemoteException {
+			if (agent == null) return;
+
+			if (ag.getId() == agent.getId())
+				AgentView.this.finish();
+		}
+
+		@Override
+		public void error(IAgent ag, IError error) throws RemoteException {}
+
+		@Override
+		public void agentChangeState(IAgent ag, IState state)
+				throws RemoteException {}
+
+		@Override
+		public void agentNewMeassure(IAgent ag, IAgentMetric metric)
+				throws RemoteException {}
+	};
+
+	private void registerManagerCallbacks() {
+		IManagerService managerService = (IManagerService)
+			GlobalStorage.getInstance().get(IManagerService.class.toString());
+
+		if (managerService == null) {
+			Log.e("AgentAttributeView", "ManagerService is null, cant get manager callbacks");
+			return;
+		}
+		try {
+			managerService.registerApplication(msc);
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	private void unregisterManagerCallbacks() {
+		IManagerService managerService = (IManagerService)
+		GlobalStorage.getInstance().get(IManagerService.class.toString());
+
+		if (managerService == null) {
+			Log.e("AgentAttributeView", "ManagerService is null, cant unregister manager callbacks");
+			return;
+		}
+		try {
+			managerService.registerApplication(msc);
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	private ServiceConnection agentConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			agentService = IAgentService.Stub.asInterface(service);
+			GlobalStorage.getInstance().set(IAgentService.class.toString(), agentService);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			Log.e("AgentView", "Service disconnected");
+			GlobalStorage.getInstance().del(IAgentService.class.toString());
+			agentService = null;
+		}
+	};
+
+	private ServiceConnection pmStoreConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			pmStoreService = IPMStoreService.Stub.asInterface(service);
+			GlobalStorage.getInstance().set(IPMStoreService.class.toString(), pmStoreService);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			System.err.println("Service pmStore disconnected ");
+			GlobalStorage.getInstance().del(IPMStoreService.class.toString());
+			pmStoreService = null;
+		}
+	};
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		Bundle extras  = getIntent().getExtras();
+		if (extras != null){
+			try {
+				agent = (IAgent) extras.get("agent");
+			} catch (Exception e) {
+				Toast t = new Toast(this);
+				t.setText("Error on agent, can't be displayed");
+				t.show();
+				finish();
+				return;
+			}
+		}
+
+		registerManagerCallbacks();
+
+		bindService(new Intent(IAgentService.class.getName()), agentConnection, Context.BIND_AUTO_CREATE);
+		bindService(new Intent(IPMStoreService.class.getName()), pmStoreConnection, Context.BIND_AUTO_CREATE);
+
+		setContentView(R.layout.agentview);
+		TabHost tab = getTabHost();
+		Intent intent;
+
+		intent = new Intent(AgentView.this, AgentAttributeView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("Attributes").setIndicator("Attributes").setContent(intent));
+/*
+		intent = new Intent(AgentView.this, AgentPMStoreView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("PMStores").setIndicator("PMStores").setContent(intent));
+
+		intent = new Intent(AgentView.this, AgentMeasureView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
+*/
+		tab.setCurrentTab(0);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		if (agentConnection != null)
+			unbindService(agentConnection);
+		if (pmStoreConnection != null)
+			unbindService(pmStoreConnection);
+		unregisterManagerCallbacks();
+	}
+
+
+/*
 	private Vector<IAgentMetric> metrics = new Vector<IAgentMetric>();
 	private Handler handler = new Handler();
 
@@ -510,4 +633,5 @@ public class AgentView extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+*/
 }

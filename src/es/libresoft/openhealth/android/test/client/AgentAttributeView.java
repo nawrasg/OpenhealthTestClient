@@ -26,31 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
-import java.util.ArrayList;
-
-import es.libresoft.openhealth.android.aidl.IAgent;
-import es.libresoft.openhealth.android.aidl.IAgentService;
-import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
-import es.libresoft.openhealth.android.aidl.IManagerService;
-import es.libresoft.openhealth.android.aidl.IState;
-import es.libresoft.openhealth.android.aidl.types.IAttribute;
-import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
-import es.libresoft.openhealth.android.aidl.types.objects.IMDS;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.util.Log;
 import android.view.Gravity;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
+import es.libresoft.openhealth.android.aidl.IAgent;
 
 public class AgentAttributeView extends Activity {
 
 	private IAgent agent = null;
-	
+/*	
 	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
 
 		@Override
@@ -108,13 +93,13 @@ public class AgentAttributeView extends Activity {
 			return;
 		}
 	}
-
+*/
 	private void show(String msg) {
 		Toast t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
 		t.setGravity(Gravity.CENTER, 0, 0);
 		t.show();
 	}
-
+/*
 	private boolean getAttributes(ArrayList<IAttribute> attrs) {
 		IError err = new IError();
 		try {
@@ -166,7 +151,7 @@ public class AgentAttributeView extends Activity {
 			tl.addView(tr);
 		}
 	}
-
+*/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -180,14 +165,14 @@ public class AgentAttributeView extends Activity {
 			return;
 		}
 		agent = extras.getParcelable("agent");
-		showAttributes();
+//		showAttributes();
 
-		registerManagerCallbacks();
+//		registerManagerCallbacks();
 	}
 
 	@Override
 	protected void onDestroy() {
-		unregisterManagerCallbacks();
+//		unregisterManagerCallbacks();
 
 		super.onDestroy();
 	}
