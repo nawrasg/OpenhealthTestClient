@@ -29,15 +29,6 @@ package es.libresoft.openhealth.android.test.client;
 
 import java.util.Vector;
 
-import es.libresoft.openhealth.android.aidl.IAgent;
-import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
-import es.libresoft.openhealth.android.aidl.IManagerService;
-import es.libresoft.openhealth.android.aidl.IState;
-import es.libresoft.openhealth.android.aidl.types.IAttribute;
-import es.libresoft.openhealth.android.aidl.types.IError;
-import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
-import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
-
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -46,7 +37,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +44,12 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import es.libresoft.openhealth.android.aidl.IAgent;
+import es.libresoft.openhealth.android.aidl.IManagerClientCallback;
+import es.libresoft.openhealth.android.aidl.IManagerService;
+import es.libresoft.openhealth.android.aidl.IState;
+import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 
 public class ManagerTestClient extends ListActivity {
 
