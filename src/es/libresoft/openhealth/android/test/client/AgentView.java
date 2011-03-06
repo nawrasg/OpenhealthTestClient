@@ -169,11 +169,11 @@ public class AgentView extends TabActivity {
 		intent = new Intent(AgentView.this, AgentAttributeView.class);
 		intent.putExtra("agent", agent);
 		tab.addTab(tab.newTabSpec("Attributes").setIndicator("Attributes").setContent(intent));
-/*
+
 		intent = new Intent(AgentView.this, AgentPMStoreView.class);
 		intent.putExtra("agent", agent);
 		tab.addTab(tab.newTabSpec("PMStores").setIndicator("PMStores").setContent(intent));
-*/
+
 		intent = new Intent(AgentView.this, AgentMeasureView.class);
 		intent.putExtra("agent", agent);
 		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
