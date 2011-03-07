@@ -123,10 +123,13 @@ public class AgentAttributeView extends Activity {
 			return;
 		}
 		agent = extras.getParcelable("agent");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
 		showAttributes();
-		//TODO: There is a "bug" for first showAttributes because agentService is'nt registered yet
-		// add a dialog and asynctask waiting for the services of AgentView (IAgentService, IPMStoreService) are binded
-		// as Dialog Notification from http://developer.android.com/guide/topics/ui/notifiers/index.html
 	}
 
 	@Override

@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package es.libresoft.openhealth.android.test.client;
 
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -50,6 +51,7 @@ public class AgentView extends TabActivity {
 	private IAgent agent = null;
 	private IAgentService agentService = null;
 	private IPMStoreService pmStoreService = null;
+	private ProgressDialog pd = null;
 
 	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
 
@@ -114,6 +116,11 @@ public class AgentView extends TabActivity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			agentService = IAgentService.Stub.asInterface(service);
 			GlobalStorage.getInstance().set(IAgentService.class.toString(), agentService);
+			if (pmStoreService != null) //all services are connected
+			{
+				initTabs();
+				pd.dismiss();
+			}
 		}
 
 		@Override
@@ -130,6 +137,11 @@ public class AgentView extends TabActivity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			pmStoreService = IPMStoreService.Stub.asInterface(service);
 			GlobalStorage.getInstance().set(IPMStoreService.class.toString(), pmStoreService);
+			if (agentService != null) //all services are connected
+			{
+				initTabs();
+				pd.dismiss();
+			}
 		}
 
 		@Override
@@ -140,6 +152,24 @@ public class AgentView extends TabActivity {
 		}
 	};
 
+	private void initTabs() {
+		TabHost tab = getTabHost();
+		Intent intent;
+
+		intent = new Intent(AgentView.this, AgentAttributeView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("Attributes").setIndicator("Attributes").setContent(intent));
+
+		intent = new Intent(AgentView.this, AgentPMStoreView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("PMStores").setIndicator("PMStores").setContent(intent));
+
+		intent = new Intent(AgentView.this, AgentMeasureView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
+
+		tab.setCurrentTab(0);
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -159,26 +189,13 @@ public class AgentView extends TabActivity {
 
 		registerManagerCallbacks();
 
+		pd = ProgressDialog.show(this, "Connecting ...", "Waiting for connection");
+		pd.show();
+
 		bindService(new Intent(IAgentService.class.getName()), agentConnection, Context.BIND_AUTO_CREATE);
 		bindService(new Intent(IPMStoreService.class.getName()), pmStoreConnection, Context.BIND_AUTO_CREATE);
 
 		setContentView(R.layout.agentview);
-		TabHost tab = getTabHost();
-		Intent intent;
-
-		intent = new Intent(AgentView.this, AgentAttributeView.class);
-		intent.putExtra("agent", agent);
-		tab.addTab(tab.newTabSpec("Attributes").setIndicator("Attributes").setContent(intent));
-
-		intent = new Intent(AgentView.this, AgentPMStoreView.class);
-		intent.putExtra("agent", agent);
-		tab.addTab(tab.newTabSpec("PMStores").setIndicator("PMStores").setContent(intent));
-
-		intent = new Intent(AgentView.this, AgentMeasureView.class);
-		intent.putExtra("agent", agent);
-		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
-
-		tab.setCurrentTab(0);
 	}
 
 	@Override
