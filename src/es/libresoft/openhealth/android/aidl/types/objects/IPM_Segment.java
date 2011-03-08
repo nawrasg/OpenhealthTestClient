@@ -31,12 +31,13 @@ import android.os.Parcelable;
 
 public class IPM_Segment extends IDIMClass implements Parcelable {
 
-	/* To identify a IPM_Segment is needed:
-	 * Identifier of the agent => IAgent stored in the agent attribute of IDIMClass
-	 * Identifier of the pmStore => HANDLE of IPM_Store stored in store attribute of this class
-	 * Identifier of the segment => InstNumber of the segment stored in handle attribute of IDIMClass
+	/*
+	 * To identify a IPM_Segment is needed: Identifier of the agent => IAgent
+	 * stored in the agent attribute of IDIMClass Identifier of the pmStore =>
+	 * HANDLE of IPM_Store stored in store attribute of this class Identifier of
+	 * the segment => InstNumber of the segment stored
 	 */
-	private IPM_Store store;
+	private int instNum;
 
 	public static final Parcelable.Creator<IPM_Segment> CREATOR =
 			new Parcelable.Creator<IPM_Segment>() {
@@ -51,13 +52,12 @@ public class IPM_Segment extends IDIMClass implements Parcelable {
 
 	private IPM_Segment (Parcel in) {
 		super(in);
-		ClassLoader cl = this.getClass().getClassLoader();
-		store = in.readParcelable(cl);
+		instNum = in.readInt();
 	}
 
 	public IPM_Segment(int instNumber, IPM_Store store) {
-		super(instNumber, store.getAgent());
-		this.store = store;
+		super(store.getHandle(), store.getAgent());
+		this.instNum = instNumber;
 	}
 
 	@Override
@@ -68,10 +68,10 @@ public class IPM_Segment extends IDIMClass implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeParcelable(store, 0);
+		dest.writeInt(this.instNum);
 	}
 
-	public IPM_Store getPMStore() {
-		return store;
+	public int getInstNumber() {
+		return instNum;
 	}
 }
