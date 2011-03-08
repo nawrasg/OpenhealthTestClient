@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/MENU_PMSTORE"
+    android:icon="@drawable/update"
+    android:title="@string/update_pmstore" />
   <item android:id="@+id/MENU_DISCONNECT"
     android:icon="@drawable/release"
     android:title="@string/disconnect" />

@@ -108,7 +108,7 @@ public class AgentPMStoreView extends ExpandableListActivity {
             textView.setPadding(36, 0, 0, 0);
             return textView;
         }
-        
+
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                 View convertView, ViewGroup parent) {
             TextView textView = getGenericView();
