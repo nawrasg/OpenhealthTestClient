@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
@@ -91,59 +92,86 @@ public class AgentPMStoreView extends ExpandableListActivity {
 			return childPosition;
 		}
 
-        public int getChildrenCount(int groupPosition) {
-            return segments.get(groupPosition).size();
-        }
+		public int getChildrenCount(int groupPosition) {
+			return segments.get(groupPosition).size();
+		}
 
-        public TextView getGenericView() {
-            // Layout parameters for the ExpandableListView
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 64);
+		public TextView getGenericView() {
+			// Layout parameters for the ExpandableListView
+			AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT, 64);
 
-            TextView textView = new TextView(AgentPMStoreView.this);
-            textView.setLayoutParams(lp);
-            // Center the text vertically
-            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-            // Set the text starting position
-            textView.setPadding(36, 0, 0, 0);
-            return textView;
-        }
+			TextView textView = new TextView(AgentPMStoreView.this);
+			textView.setLayoutParams(lp);
+			// Center the text vertically
+			textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+			// Set the text starting position
+			textView.setPadding(36, 0, 0, 0);
+			return textView;
+		}
 
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-                View convertView, ViewGroup parent) {
-            TextView textView = getGenericView();
-            textView.setText("PMSegment "+((IPM_Segment)getChild(groupPosition, childPosition)).getInstNumber());
-            return textView;
-        }
+		private class LaunchAgentPMStoreSegmentOnClickListener implements OnClickListener {
+			private IAgent ag = null;
+			private IPM_Store str = null;
+			private IPM_Segment seg = null;
 
-        public Object getGroup(int groupPosition) {
-            return stores.get(groupPosition);
-        }
+			LaunchAgentPMStoreSegmentOnClickListener(IAgent a, IPM_Store s, IPM_Segment sg) {
+				ag = a;
+				str = s;
+				seg = sg;
+			}
 
-        public int getGroupCount() {
-            return stores.size();
-        }
+			@Override
+			public void onClick(View v) {
+				if (ag == null || str == null || seg == null)
+					return;
+				show("Click segment " + seg.getInstNumber());
+			}
+		};
 
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
+		public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+				View convertView, ViewGroup parent) {
+			TextView textView = getGenericView();
+			textView.setText("PMSegment "+((IPM_Segment)getChild(groupPosition, childPosition)).getInstNumber());
 
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-                ViewGroup parent) {
-            TextView textView = getGenericView();
-            textView.setText("PMStore "+((IPM_Store)getGroup(groupPosition)).getHandle());
-            return textView;
-        }
+			LaunchAgentPMStoreSegmentOnClickListener eventOnClick =
+				new LaunchAgentPMStoreSegmentOnClickListener(
+						agent,
+						(IPM_Store)getGroup(groupPosition),
+						(IPM_Segment)getChild(groupPosition, childPosition));
+			textView.setOnClickListener(eventOnClick);
 
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
+			return textView;
+		}
 
-        public boolean hasStableIds() {
-            return true;
-        }
+		public Object getGroup(int groupPosition) {
+			return stores.get(groupPosition);
+		}
 
-    }
+		public int getGroupCount() {
+			return stores.size();
+		}
+
+		public long getGroupId(int groupPosition) {
+			return groupPosition;
+		}
+
+		public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+				ViewGroup parent) {
+			TextView textView = getGenericView();
+			textView.setText("PMStore "+((IPM_Store)getGroup(groupPosition)).getHandle());
+
+			return textView;
+		}
+
+		public boolean isChildSelectable(int groupPosition, int childPosition) {
+			return true;
+		}
+
+		public boolean hasStableIds() {
+			return true;
+		}
+	}
 
 
 	@Override
