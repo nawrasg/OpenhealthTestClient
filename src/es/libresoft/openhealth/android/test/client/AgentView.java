@@ -103,7 +103,7 @@ public class AgentView extends TabActivity {
 			return;
 		}
 		try {
-			managerService.registerApplication(msc);
+			managerService.unregisterApplication(msc);
 		} catch(RemoteException e) {
 			e.printStackTrace();
 			return;
