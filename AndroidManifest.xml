@@ -15,6 +15,7 @@
         <activity android:name=".AgentAttributeView" />
         <activity android:name=".AgentMeasureView" />
         <activity android:name=".AgentPMStoreView" />
+        <activity android:name=".AgentPMStoreSegmentView" />
     </application>
     <uses-sdk android:minSdkVersion="8" />
 </manifest> 

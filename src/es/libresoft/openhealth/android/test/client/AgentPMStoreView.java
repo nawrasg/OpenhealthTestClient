@@ -3,6 +3,7 @@ package es.libresoft.openhealth.android.test.client;
 import java.util.ArrayList;
 
 import android.app.ExpandableListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.view.Gravity;
@@ -125,7 +126,12 @@ public class AgentPMStoreView extends ExpandableListActivity {
 			public void onClick(View v) {
 				if (ag == null || str == null || seg == null)
 					return;
-				show("Click segment " + seg.getInstNumber());
+
+				Intent intent = new Intent(AgentPMStoreView.this, AgentPMStoreSegmentView.class);
+				intent.putExtra("agent", agent);
+				intent.putExtra("pmstore", str);
+				intent.putExtra("pmsegment", seg);
+				startActivity(intent);
 			}
 		};
 
