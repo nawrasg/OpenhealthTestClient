@@ -146,18 +146,7 @@ public class ManagerTestClient extends ListActivity {
 
 		@Override
 		public void agentNewMeassure(IAgent agent, IAgentMetric metric)
-				throws RemoteException {
-/*
-			System.err.println("Measure received for agent: " + agent.getTransportDesc());
-			for (IAttribute att: metric.getAttributes()) {
-				System.err.println("Att: " + att.getAttrId() + ": " + att.getAttr());
-			}
-
-			for (IMeasure me: metric.getMeasures()) {
-				System.err.println("Measure: type: " + me.getMeasureType() + " value: " + me);
-			}
-*/
-		}
+				throws RemoteException {}
 
 	};
 
