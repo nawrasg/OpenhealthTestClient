@@ -53,6 +53,10 @@ public class AgentView extends TabActivity {
 	private IPMStoreService pmStoreService = null;
 	private ProgressDialog pd = null;
 
+	public static final int AGENT_VIEW_TAB_ATTRIBUTE = 0;
+	public static final int AGENT_VIEW_TAB_PMSTORE = 1;
+	public static final int AGENT_VIEW_TAB_MEASURE = 2;
+
 	private IManagerClientCallback msc = new IManagerClientCallback.Stub() {
 
 		@Override
@@ -168,7 +172,7 @@ public class AgentView extends TabActivity {
 		intent.putExtra("agent", agent);
 		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
 
-		tab.setCurrentTab(0);
+		tab.setCurrentTab(AGENT_VIEW_TAB_ATTRIBUTE);
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -196,6 +200,7 @@ public class AgentView extends TabActivity {
 		bindService(new Intent(IPMStoreService.class.getName()), pmStoreConnection, Context.BIND_AUTO_CREATE);
 
 		setContentView(R.layout.agentview);
+		GlobalStorage.getInstance().set(AgentView.class.toString(), this);
 	}
 
 	@Override
@@ -207,6 +212,7 @@ public class AgentView extends TabActivity {
 		if (pmStoreConnection != null)
 			unbindService(pmStoreConnection);
 		unregisterManagerCallbacks();
+		GlobalStorage.getInstance().del(AgentView.class.toString());
 	}
 
 
