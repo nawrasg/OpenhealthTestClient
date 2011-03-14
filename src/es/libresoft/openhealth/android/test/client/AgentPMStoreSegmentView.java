@@ -87,9 +87,7 @@ public class AgentPMStoreSegmentView extends Activity{
 		ArrayList<IAttribute> attrs = new ArrayList<IAttribute>();
 		try {
 			IError err = new IError();
-			Log.e("AgentPMStoreSegment", "before getObjectAttrs");
 			agentService.getObjectAttrs(store, attrs, err);
-			Log.e("AgentPMStoreSegment", "after getObjectAttrs");
 			if (err.getErrCode() != 0) {
 				show("Cant get PMStoreAttributes err: " + err.getErrMsg());
 				Log.e("AgentPMStoreSegment", "Cant get PMStoreAttributes err: " + err.getErrMsg());
@@ -103,7 +101,7 @@ public class AgentPMStoreSegmentView extends Activity{
 
 		//TODO: Show attributes in interface
 		for (IAttribute attr: attrs)
-			Log.e("AgentPMStoreSegment", "Attr:" + attr.toString());
+			Log.e("AgentPMStoreSegment", "Attr:" + attr.getAttrIdStr());
 	}
 
 	@Override
