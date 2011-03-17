@@ -289,4 +289,95 @@ public interface Nomenclature {
 	public static final int MDC_CTXT_GLU_TESTER_SELF			=	29280;	/*                               */
 	public static final int MDC_CTXT_GLU_TESTER_HCP				=	29284;	/*                               */
 	public static final int MDC_CTXT_GLU_TESTER_LAB				=	29288;	/*                               */
+
+	/**********************************************************************************
+	* All of the following are from NomPartition (MDC_PART_PHD_AI)                    *
+	**********************************************************************************/
+	public static final int MDC_AI_TYPE_SENSOR_FALL				=	1;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_PERS				=	2;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_SMOKE			=	3;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_CO				=	4;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_WATER			=	5;		/*   								*/
+	public static final int MDC_AI_TYPE_SENSOR_GAS				=	6;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_MOTION			=	7;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_PROPEXIT			=	8;		/*    								*/
+	public static final int MDC_AI_TYPE_SENSOR_ENURESIS			=	9;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_CONTACTCLOSURE	=	10;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_USAGE			=	11;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_SWITCH			=	12;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_DOSAGE			=	13;		/*     								*/
+	public static final int MDC_AI_TYPE_SENSOR_TEMP				=	14;		/*     								*/
+
+	/* The range 15-1024 is reserved for future expansion                                                 		*/
+	/**********************************************************************************
+	* All of the following are from NomPartition – Partition: MDC_PART_PHD_AI
+	*
+	**********************************************************************************/
+	/********************************************************************************************************
+	* Locations are encoded within 16 bits as.....															*
+	* upper 10 bits are the location type (for example bedroom - MDC_AI_LOCATION_BEDROOM) 					*
+	* lower 6 bits are the location type instance identifier (for example bedroom 0, bedroom 1, etc.)       *
+	* therefore, location viewed as a 16 bit entity would have the types assigned in blocks of 64          	*
+	* The location type instance identifier allows for both a single dwelling with multiple rooms of that 	*
+	* type, as well as a multiple family dwelling that may contain that type room in each subunit          	*
+	* *******************************************************************************************************/
+	/* general                                                                                             	*/
+	public static final int MDC_AI_LOCATION_START				=	1024;		/*     								*/
+	public static final int MDC_AI_LOCATION_UNKNOWN				=	1024;		/*     								*/
+	public static final int MDC_AI_LOCATION_UNSPECIFIED			=	1088;		/*     								*/
+	public static final int MDC_AI_LOCATION_RESIDENT			=	1152;		/*     								*/
+	public static final int MDC_AI_LOCATION_LOCALUNIT			=	1216;		/*     								*/
+	/* The range 1217-3071 is reserved for future expansion															*/
+	/* rooms																										*/
+	public static final int MDC_AI_LOCATION_BEDROOM				=	3072;		/*     								*/
+	public static final int MDC_AI_LOCATION_BEDROOMMASTER		=	3136;		/*     								*/
+	public static final int MDC_AI_LOCATION_TOILET				=	3200;		/*     								*/
+	public static final int MDC_AI_LOCATION_TOILETMAIN			=	3264;		/*     								*/
+	public static final int MDC_AI_LOCATION_OUTSIDETOILET		=	3328;		/*     								*/
+	public static final int MDC_AI_LOCATION_SHOWERROOM			=	3392;		/*     								*/
+	public static final int MDC_AI_LOCATION_KITCHEN				=	3456;		/*     								*/
+	public static final int MDC_AI_LOCATION_KITCHENMAIN			=	3520;		/*     								*/
+	public static final int MDC_AI_LOCATION_LIVINGAREA			=	3584;		/*     								*/
+	public static final int MDC_AI_LOCATION_LIVINGROOM			=	3648;		/*     								*/
+	public static final int MDC_AI_LOCATION_DININGROOM			=	3712;		/*     								*/
+	public static final int MDC_AI_LOCATION_STUDY				=	3776;		/*     								*/
+	public static final int MDC_AI_LOCATION_HALL				=	3840;		/*     								*/
+	public static final int MDC_AI_LOCATION_LANDING				=	3904;		/*     								*/
+	public static final int MDC_AI_LOCATION_STAIRS				=	3968;		/*     								*/
+	public static final int MDC_AI_LOCATION_HALLLANDINGSTAIRS	=	4032;		/*     								*/
+	public static final int MDC_AI_LOCATION_GARAGE				=	4096;		/*     								*/
+	public static final int MDC_AI_LOCATION_GARDENGARAGE		=	4160;		/*     								*/
+	public static final int MDC_AI_LOCATION_GARDENGARAGEAREA	=	4224;		/*     								*/
+	public static final int MDC_AI_LOCATION_FRONTGARDEN			=	4288;		/*     								*/
+	public static final int MDC_AI_LOCATION_BACKGARDEN			=	4352;		/*     								*/
+	public static final int MDC_AI_LOCATION_SHED				=	4416;		/*     								*/
+	/* The range 4417-7167 is reserved for future expansion															*/
+	/* appliances																									*/
+	public static final int MDC_AI_APPLIANCE_KETTLE				=	7168; 		/* Note: Self heating				*/
+	public static final int MDC_AI_APPLIANCE_TELEVISION			=	7232;		/*     								*/
+	public static final int MDC_AI_APPLIANCE_STOVE				=	7296;		/*     								*/
+	public static final int MDC_AI_APPLIANCE_MICROWAVE			=	7360;		/*     								*/
+	public static final int MDC_AI_APPLIANCE_TOASTER			=	7424;		/*     								*/
+	public static final int MDC_AI_APPLIANCE_VACUUM				=	7488;		/*     								*/
+	public static final int MDC_AI_APPLIANCE_APPLIANCE			=	7552;		/*     								*/
+	public static final int MDC_AI_APPLIANCE_FAUCET				=	7616;		/*     								*/
+	/* The range 7617-9215 is reserved for future expansion															*/
+	/* doors																										*/
+	public static final int MDC_AI_LOCATION_FRONTDOOR			=	9216;		/*     								*/
+	public static final int MDC_AI_LOCATION_BACKDOOR			=	9280;		/*     								*/
+	public static final int MDC_AI_LOCATION_FRIDGEDOOR			=	9344;		/*     								*/
+	public static final int MDC_AI_LOCATION_MEDCABDOOR			=	9408;		/*     								*/
+	public static final int MDC_AI_LOCATION_WARDROBEDOOR		=	9472;		/*     								*/
+	public static final int MDC_AI_LOCATION_FRONTCUPBOARDDOOR	=	9536;		/*     								*/
+	public static final int MDC_AI_LOCATION_OTHERDOOR			=	9600;		/*     								*/
+	/* The range 9601-11263 is reserved for future expansion														*/
+	/* usage																										*/
+	public static final int MDC_AI_LOCATION_BED					=	11264;		/*     								*/
+	public static final int MDC_AI_LOCATION_CHAIR				=	11328;		/*     								*/
+	public static final int MDC_AI_LOCATION_SOFA				=	11392;		/*     								*/
+	public static final int MDC_AI_LOCATION_TOILET_SEAT			=	11456;		/*     								*/
+	public static final int MDC_AI_LOCATION_STOOL				=	11520;		/*     								*/
+	/* The range 11521-13311 is reserved for future expansion														*/
+	/* The range 13312-61439 (0x3400-0xEFFF) is reserved for future expansion										*/
+
 }
