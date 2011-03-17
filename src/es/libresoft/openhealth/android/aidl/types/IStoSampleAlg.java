@@ -78,4 +78,10 @@ public class IStoSampleAlg implements Parcelable {
 		IStoSampleAlg agent = (IStoSampleAlg) o;
 		return this.value == agent.value;
 	}
+
+	@Override
+	public String toString() {
+		return new Integer(value).toString();
+	}
+
 }

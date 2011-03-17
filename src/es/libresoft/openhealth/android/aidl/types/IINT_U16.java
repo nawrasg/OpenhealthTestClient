@@ -80,4 +80,10 @@ public class IINT_U16 implements Parcelable {
 		IINT_U16 agent = (IINT_U16) o;
 		return this.value == agent.value;
 	}
+
+	@Override
+	public String toString() {
+		return new Integer(value).toString();
+	}
+
 }

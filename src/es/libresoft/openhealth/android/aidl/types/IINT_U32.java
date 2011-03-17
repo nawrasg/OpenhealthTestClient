@@ -79,4 +79,10 @@ public class IINT_U32 implements Parcelable {
 		IINT_U32 agent = (IINT_U32) o;
 		return this.value == agent.value;
 	}
+
+	@Override
+	public String toString() {
+		return new Long(value).toString();
+	}
+
 }

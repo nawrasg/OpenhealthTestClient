@@ -112,4 +112,10 @@ public class IBITSTRING implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "IBITSTRING [bits=" + Arrays.toString(bits) + ", trailBits="
+				+ trailBits + "]";
+	}
+
 }

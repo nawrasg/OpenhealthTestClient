@@ -95,4 +95,9 @@ public class IRelativeTime implements Parcelable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return new Long(value).toString();
+	}
+
 }

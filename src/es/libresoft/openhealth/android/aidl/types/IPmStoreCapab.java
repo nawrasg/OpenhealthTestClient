@@ -100,7 +100,7 @@ public class IPmStoreCapab implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "IPmStoreCapab [bits=" + bits + "]";
+		return bits.toString();
 	}
 
 }
