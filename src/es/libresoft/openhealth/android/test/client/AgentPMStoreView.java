@@ -132,10 +132,12 @@ public class AgentPMStoreView extends ExpandableListActivity {
 				if (ag == null || str == null || seg == null)
 					return;
 
-				Intent intent = new Intent(AgentPMStoreView.this, AgentPMStoreSegmentView.class);
+				//Intent intent = new Intent(AgentPMStoreView.this, AgentPMStoreSegmentView.class);
+				Intent intent = new Intent(AgentPMStoreView.this, AgentAttributeView.class);
 				intent.putExtra("agent", agent);
 				intent.putExtra("pmstore", str);
 				intent.putExtra("pmsegment", seg);
+				intent.putExtra("idim", seg);
 				startActivity(intent);
 			}
 		};

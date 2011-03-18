@@ -3,6 +3,7 @@ Copyright (C) 2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
 Author: Santiago Carot-Nemesio <scarot@libresoft.es>
+Author: Jorge Fernández González <jfernandez@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -43,11 +44,13 @@ import es.libresoft.openhealth.android.aidl.IAgent;
 import es.libresoft.openhealth.android.aidl.IAgentService;
 import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
+import es.libresoft.openhealth.android.aidl.types.objects.IDIMClass;
 import es.libresoft.openhealth.android.aidl.types.objects.IMDS;
 
 public class AgentAttributeView extends Activity {
 
 	private IAgent agent = null;
+	private IDIMClass idim = null;
 
 	private void show(String msg) {
 		Toast t = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
@@ -65,18 +68,23 @@ public class AgentAttributeView extends Activity {
 				return false;
 			}
 
-			IMDS mds = new IMDS();
-			agentService.getMDS(agent, mds, err);
-			if (err.getErrCode() != 0) {
-				show("Error getting MDS " + err.getErrMsg());
-				System.err.println("Error getting MDS " + err.getErrMsg());
-				return false;
+			// If we have an IDIM object, we show its attributes. In other case
+			// we request for the agent MDS to show its attributes.
+			if (idim == null){
+				idim = new IMDS();
+				agentService.getMDS(agent, (IMDS)idim, err);
+				if (err.getErrCode() != 0) {
+					show("Error getting MDS " + err.getErrMsg());
+					System.err.println("Error getting MDS " + err.getErrMsg());
+					return false;
+				}
 			}
 
-			agentService.getObjectAttrs(mds, attrs, err);
+			agentService.getObjectAttrs(idim, attrs, err);
 			if (err.getErrCode() != 0) {
 				show("Error getting attributes " + err.getErrMsg());
 				System.err.println("Error getting attributes " + err.getErrMsg());
+				return false;
 			}
 		} catch (RemoteException e) {
 			show("RemoteException in agentService.getAttributes");
@@ -117,12 +125,16 @@ public class AgentAttributeView extends Activity {
 		setContentView(R.layout.agentattributeview);
 
 		Bundle extras  = getIntent().getExtras();
-		if (extras == null || !extras.containsKey("agent")) {
-			show("Not sended agent");
+		if (extras != null && extras.containsKey("agent")) {
+			agent = extras.getParcelable("agent");
+			if (extras.containsKey("idim")){
+				idim = extras.getParcelable("idim");
+			}
+		}else{
+			show("Agent not received");
 			finish();
 			return;
 		}
-		agent = extras.getParcelable("agent");
 	}
 
 	@Override
