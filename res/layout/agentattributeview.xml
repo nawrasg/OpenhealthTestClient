@@ -4,9 +4,17 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:layout_weight="1">
-  <TableLayout
-    android:id="@+id/agentattributetable"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
-  </TableLayout>
+
+	<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+		<TableLayout
+			android:id="@+id/agentattributetable"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" >
+		</TableLayout>
+
+	</HorizontalScrollView>
+
 </ScrollView>
