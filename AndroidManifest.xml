@@ -5,17 +5,18 @@
       android:versionName="1.0">
     <application android:icon="@drawable/openhealth" android:label="@string/app_name">
         <activity android:name=".ManagerTestClient"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AgentView" />
-        <activity android:name=".AgentAttributeView" />
-        <activity android:name=".AgentMeasureView" />
-        <activity android:name=".AgentPMStoreView" />
-        <activity android:name=".AgentPMStoreSegmentView" />
+        <activity android:name=".AgentView" android:screenOrientation="portrait"/>
+        <activity android:name=".AgentAttributeView" android:screenOrientation="portrait"/>
+        <activity android:name=".AgentMeasureView" android:screenOrientation="portrait"/>
+        <activity android:name=".AgentPMStoreView" android:screenOrientation="portrait"/>
+        <activity android:name=".AgentPMStoreSegmentView" android:screenOrientation="portrait"/>
     </application>
     <uses-sdk android:minSdkVersion="8" />
 </manifest> 
