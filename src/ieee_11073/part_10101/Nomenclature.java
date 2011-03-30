@@ -3,6 +3,7 @@ Copyright (C) 2008-2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Jose Antonio Santos Cadenas <jcaden@libresoft.es>
 Author: Santiago Carot-Nemesio <scarot@libresoft.es>
+Author: Jorge Fernández González <jfernandez@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -34,15 +35,24 @@ package ieee_11073.part_10101;
 public interface Nomenclature {
 
 	/* Partition codes																				 		 */
+	public static final int	MDC_PART_UNSPEC						=	0;		/* Unspecified					 */
 	public static final int MDC_PART_OBJ						=	1;		/* Object Infrastr.              */
 	public static final int MDC_PART_SCADA						=	2;		/* SCADA (Physio IDs             */
+	public static final int MDC_PART_EVT						=	3;		/* Alert/Events					 */
 	public static final int MDC_PART_DIM						=	4;		/* Dimension                     */
+	public static final int MDC_PART_VATTR						=	5;		/* Virtual/Attributes			 */
+	public static final int MDC_PART_PGRP						=	6;		/* Param Group ID				 */
+	public static final int MDC_PART_SITES						=	7;		/* Body Site Locations			 */
 	public static final int MDC_PART_INFRA						=	8;		/* Infrastructure                */
+	public static final int MDC_PART_FEF						=	9;		/* File Exchange Format			 */
+	public static final int MDC_PART_ECG_EXTN					=	10;		/* ECG Extensions				 */
+	public static final int MDC_PART_IDCO_EXTN					=	11;		/* IDCO Extensions				 */
 	public static final int MDC_PART_PHD_DM						=	128;	/* Disease Mgmt                  */
 	public static final int MDC_PART_PHD_HF						=	129;	/* Health and Fitness            */
 	public static final int MDC_PART_PHD_AI						=	130;	/* Aging Independently           */
 	public static final int MDC_PART_RET_CODE					=	255;	/* Return Codes                  */
 	public static final int MDC_PART_EXT_NOM					=	256;	/* Ext. Nomenclature             */
+	public static final int MDC_PART_PVT						=	1024;	/* Private						 */
 
 	/*************************************************************************************************
 	* From Object Infrastructure (MDC_PART_OBJ)
@@ -118,7 +128,7 @@ public interface Nomenclature {
 	public static final int MDC_ATTR_PM_SEG_PERSON_ID 			=	2639;	/*                               */
 	public static final int MDC_ATTR_SEG_STATS					=   2640;	/*                               */
 	public static final int MDC_ATTR_SEG_FIXED_DATA				=   2641;	/*                               */
-	public static final int MDC_ATTR_PM_SEG_ELEM_STAT_ATTR		=	2642;	/*                               */
+	public static final int MDC_ATTR_PM_SEG_ELEM_STAT_ATTR		=	2642;	/*                               */ // Removed in the standard revision
 	public static final int MDC_ATTR_SCAN_HANDLE_ATTR_VAL_MAP	=	2643;	/*                               */
 	public static final int MDC_ATTR_SCAN_REP_PD_MIN         	=	2644;	/*                               */
 	public static final int MDC_ATTR_ATTRIBUTE_VAL_MAP       	=	2645;	/*                               */
@@ -140,12 +150,18 @@ public interface Nomenclature {
 	public static final int MDC_ATTR_NU_CMPD_VAL_OBS_BASIC 		=	2677;	/*                               */
 	public static final int MDC_ATTR_ID_PHYSIO_LIST				=	2678;	/*                               */
 	public static final int MDC_ATTR_SCAN_HANDLE_LIST 			=	2679;	/*                               */
+	public static final int MDC_ATTR_TIME_BO					=	2689;	/*                               */
+	public static final int MDC_ATTR_TIME_STAMP_BO				=	2690;	/*                               */
+	public static final int MDC_ATTR_TIME_START_SEG_BO			=	2691;	/*                               */
+	public static final int MDC_ATTR_TIME_END_SEG_BO			=	2692;	/*                               */
 	/* Partition: ACT */
 	public static final int MDC_ACT_SEG_CLR 					=	3084;	/*                               */
 	public static final int MDC_ACT_SEG_GET_INFO 				=	3085;	/*                               */
 	public static final int MDC_ACT_SET_TIME 					=	3095;	/*                               */
 	public static final int MDC_ACT_DATA_REQUEST 				=	3099;	/*                               */
 	public static final int MDC_ACT_SEG_TRIG_XFER 				=	3100;	/*                               */
+	public static final int MDC_ACT_SET_BO_TIME					=	3101;	/*                               */
+	/* Partition: NOTI */
 	public static final int MDC_NOTI_CONFIG 					=	3356;	/*                               */
 	public static final int MDC_NOTI_SCAN_REPORT_FIXED       	=	3357;	/*                               */
 	public static final int MDC_NOTI_SCAN_REPORT_VAR         		=	3358;	/*                           */
@@ -223,14 +239,42 @@ public interface Nomenclature {
 	* From Communication Infrastructure (MDC_PART_INFRA)
 	**************************************************************************************************/
 	public static final int MDC_DEV_SPEC_PROFILE_PULS_OXIM		=	4100;	/*                               */
+	public static final int MDC_DEV_SPEC_PROFILE_MIN_ECG		=	4102;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_BP				=	4103;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_TEMP			=	4104;	/*                               */
+	public static final int MDC_DEV_SPEC_PROFILE_RESP_RATE		=	4109;	/* Respiration rate              */
 	public static final int MDC_DEV_SPEC_PROFILE_SCALE			=	4111;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_GLUCOSE		=	4113;	/*                               */
+	public static final int MDC_DEV_SPEC_PROFILE_INR			=	4114;	/* International normalized ratio */
+	public static final int MDC_DEV_SPEC_PROFILE_INSULIN_PUMP	=	4115;	/*                               */
+	public static final int MDC_DEV_SPEC_PROFILE_BCA			=	4116;	/* Body composition analyzer     */
+	public static final int MDC_DEV_SPEC_PROFILE_PEAK_FLOW		=	4117;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_HF_CARDIO		=	4137;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_HF_STRENGTH 	=	4138;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_AI_ACTIVITY_HUB = 4167;	/*                               */
 	public static final int MDC_DEV_SPEC_PROFILE_AI_MED_MINDER	=	4168;	/*                               */
+	/* The range from 4196 to 5119 is reserved for sub classifying devices within other specializations
+	(profiles). For instance in the -10441 (Cardio) specialization defines step counters as a profile */
+
+	/* 4196 through 4211 used for IEEE Std 11073-10441 (Cardio)                      */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_STEP_COUNTER	=	4200; /* Step counter 				*/
+
+	/* 4212 through 4235 used for IEEE Std 11073-10471 (Activity hub)         */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_FALL_SENSOR			=	4213;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_PERS_SENSOR			=	4214;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_SMOKE_SENSOR			=	4215;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_CO_SENSOR				=	4216;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_WATER_SENSOR			=	4217;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_GAS_SENSOR				=	4218;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_MOTION_SENSOR			=	4219;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_PROPEXIT_SENSOR		=	4220;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_ENURESIS_SENSOR		=	4221;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_CONTACTCLOSURE_SENSOR	=	4222;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_USAGE_SENSOR			=	4223;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_SWITCH_SENSOR			=	4224;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_DOSAGE_SENSOR			=	4225;	/*                               */
+	public static final int MDC_DEV_SUB_SPEC_PROFILE_TEMP_SENSOR			=	4226;	/*                               */
+
 	/* Placed 256 back from the start of the last Partition: OptionalPackageIdentifiers (i.e., 8192-256). 				  */
 	public static final int MDC_TIME_SYNC_NONE					=	7936;	/* no time synchronization protocol supported */
 	public static final int MDC_TIME_SYNC_NTPV3					=	7937;	/* RFC 1305 1992 Mar obs: 1119,1059,958 	  */
