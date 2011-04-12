@@ -73,11 +73,14 @@ public class AgentAttributeView extends Activity {
 			if (idim == null){
 				idim = new IMDS();
 				agentService.getMDS(agent, (IMDS)idim, err);
-				if (err.getErrCode() != 0) {
-					show("Error getting MDS " + err.getErrMsg());
-					System.err.println("Error getting MDS " + err.getErrMsg());
-					return false;
-				}
+			}else {
+				agentService.updateMDS(agent, err);
+			}
+
+			if (err.getErrCode() != 0) {
+				show("Error getting|updating MDS " + err.getErrMsg());
+				System.err.println("Error getting|updating MDS " + err.getErrMsg());
+				return false;
 			}
 
 			agentService.getObjectAttrs(idim, attrs, err);
