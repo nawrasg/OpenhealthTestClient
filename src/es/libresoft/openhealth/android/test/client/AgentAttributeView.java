@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -156,12 +157,28 @@ public class AgentAttributeView extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
+		IAgentService agentService = null;
+
 		switch (item.getItemId()) {
 			case R.id.MENU_ATTRIBUTES:
 				showAttributes();
 				break;
+			case R.id.MENU_SETTIME:
+				agentService = (IAgentService)
+					GlobalStorage.getInstance().get(IAgentService.class.toString());
+				if (agentService != null) {
+					try {
+						IError error = new IError();
+						agentService.setTime(agent, error);
+						Log.e("AgentAttributeView", "setTime ret:" + error.getErrMsg());
+						show("setTime ret: " + error.getErrMsg());
+					} catch (RemoteException e) {
+						show("Can't connect to the remote Service");
+					}
+				}
+				break;
 			case R.id.MENU_DISCONNECT:
-				IAgentService agentService = (IAgentService)
+				agentService = (IAgentService)
 					GlobalStorage.getInstance().get(IAgentService.class.toString());
 				if (agentService != null) {
 					try {

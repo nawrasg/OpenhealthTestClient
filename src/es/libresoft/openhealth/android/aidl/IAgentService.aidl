@@ -51,6 +51,8 @@ interface IAgentService {
 
 	void getObjectAttrs(in IDIMClass obj, out List<IAttribute> attrs, out IError error);
 
+	boolean setTime(in IAgent agent, out IError err);
+
 	void connect(in IAgent agent);
 	boolean disconnect(in IAgent agent, out IError err);
 }

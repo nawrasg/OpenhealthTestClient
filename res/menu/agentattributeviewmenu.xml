@@ -3,6 +3,9 @@
   <item android:id="@+id/MENU_ATTRIBUTES"
     android:icon="@drawable/update"
     android:title="@string/update_attributes" />
+  <item android:id="@+id/MENU_SETTIME"
+    android:icon="@drawable/update"
+    android:title="@string/setTime" />
   <item android:id="@+id/MENU_DISCONNECT"
     android:icon="@drawable/release"
     android:title="@string/disconnect" />

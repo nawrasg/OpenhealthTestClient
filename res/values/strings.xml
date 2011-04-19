@@ -3,5 +3,6 @@
     <string name="app_name">OpenhealthManagerTestClient</string>
     <string name="disconnect">Disconnect</string>
     <string name="update_attributes">Update Attributes</string>
+     <string name="setTime">Set Time</string>
     <string name="update_pmstore">Update PMStore</string>
 </resources>
