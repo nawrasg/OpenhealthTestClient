@@ -118,6 +118,9 @@ public class ManagerTestClient extends ListActivity {
 		public void agentPlugged(IAgent agent) throws RemoteException {
 			agents.add(agent);
 			handler.post(doUpdateGUI);
+			Intent intent = new Intent (ManagerTestClient.this, AgentView.class);
+			intent.putExtra("agent", agent);
+			startActivity(intent);
 		}
 
 		@Override

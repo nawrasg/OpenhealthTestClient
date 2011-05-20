@@ -160,6 +160,10 @@ public class AgentView extends TabActivity {
 		TabHost tab = getTabHost();
 		Intent intent;
 
+		intent = new Intent(AgentView.this, AgentMeasureView.class);
+		intent.putExtra("agent", agent);
+		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
+
 		intent = new Intent(AgentView.this, AgentAttributeView.class);
 		intent.putExtra("agent", agent);
 		tab.addTab(tab.newTabSpec("Attributes").setIndicator("Attributes").setContent(intent));
@@ -168,11 +172,7 @@ public class AgentView extends TabActivity {
 		intent.putExtra("agent", agent);
 		tab.addTab(tab.newTabSpec("PMStores").setIndicator("PMStores").setContent(intent));
 
-		intent = new Intent(AgentView.this, AgentMeasureView.class);
-		intent.putExtra("agent", agent);
-		tab.addTab(tab.newTabSpec("Measures").setIndicator("Measures").setContent(intent));
-
-		tab.setCurrentTab(AGENT_VIEW_TAB_ATTRIBUTE);
+		//tab.setCurrentTab(AGENT_VIEW_TAB_MEASURE);
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
