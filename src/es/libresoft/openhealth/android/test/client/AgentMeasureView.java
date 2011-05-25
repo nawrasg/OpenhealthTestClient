@@ -103,7 +103,7 @@ public class AgentMeasureView extends Activity {
 
 	private void showRow(ArrayList<TableRow> rows) {
 		TableLayout tl = (TableLayout)findViewById(R.id.agentmeasureviewtable);
-		tl.removeAllViews(); //only show the last measure
+		//tl.removeAllViews(); //only show the last measure
 		while (!rows.isEmpty())
 			tl.addView(rows.remove(rows.size()-1),0);
 	}
