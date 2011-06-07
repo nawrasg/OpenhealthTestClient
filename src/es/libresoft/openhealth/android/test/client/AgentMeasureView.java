@@ -2,6 +2,7 @@
 Copyright (C) 2011 GSyC/LibreSoft, Universidad Rey Juan Carlos.
 
 Author: Bartolomé Marín Sánchez <zeed@libresoft.es>
+Author: Jorge Fernández González <jfernandez@libresoft.es>
 
 This program is a (FLOS) free libre and open source implementation
 of a multiplatform manager device written in java according to the
@@ -28,6 +29,7 @@ package es.libresoft.openhealth.android.test.client;
 import ieee_11073.part_10101.Nomenclature;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -53,6 +55,7 @@ import es.libresoft.openhealth.android.aidl.types.IAttribute;
 import es.libresoft.openhealth.android.aidl.types.IError;
 import es.libresoft.openhealth.android.aidl.types.measures.IAgentMetric;
 import es.libresoft.openhealth.android.aidl.types.measures.IMeasure;
+import es.libresoft.openhealth.android.aidl.types.objects.INumeric;
 
 public class AgentMeasureView extends Activity {
 
@@ -110,12 +113,45 @@ public class AgentMeasureView extends Activity {
 
 	private void showUnknownAgentMetric(IAgentMetric am) {
 		String str = null;
+		int handle = -1;
 		ArrayList<TableRow> rows = new ArrayList<TableRow>();
 
 		//add attributes
 		for (IAttribute att: am.getAttributes()) {
+			if (att.getAttrId() == Nomenclature.MDC_ATTR_ID_HANDLE){
+				handle = Nomenclature.MDC_ATTR_ID_HANDLE;
+			}
 			str = "At[" + att.getAttrId() + "]:" + att.getAttr();
+			//Log.d("AgentMeasureView", "At[" + att.getAttrId() + "]:" + att.getAttr());
 			rows.add(getShowRow(str));
+		}
+
+		IAgentService agentService = (IAgentService)GlobalStorage.
+						getInstance().get(IAgentService.class.toString());
+		if (agentService == null) {
+			show("Error: AgentService does not exist");
+			return;
+		}
+		List<INumeric> nums = new ArrayList<INumeric>();
+		IError error = new IError();
+		try{
+			agentService.getNumeric(agent, nums, error);
+			List<IAttribute> attrs = new ArrayList<IAttribute>();
+			error = new IError();
+			for (int i = 0; i < nums.size(); i++){
+				agentService.getObjectAttrs(nums.get(i), attrs, error);
+				for (int j = 0; j < attrs.size(); j++){
+					if (attrs.get(j).getAttrId() == Nomenclature.MDC_ATTR_SUPPLEMENTAL_TYPES){
+						str = "At[" + attrs.get(j).getAttrId() + "]:" + attrs.get(j).getAttr().toString();
+						rows.add(getShowRow(str));
+					}
+				}
+			}
+		}catch (RemoteException e) {
+			show("RemoteException in agentService.getNumeric(...)");
+			System.err.println("RemoteException in agentService.getNumeric(...) " + e.getMessage());
+			e.printStackTrace();
+			return;
 		}
 
 		//add measures
@@ -153,9 +189,11 @@ public class AgentMeasureView extends Activity {
 		showRow(getShowRowSeparator());
 		if (timeStamp != null)
 			showRow(getShowRow(""+timeStamp));
+
 		ArrayList<String> strs = new ArrayList<String>(2);
 		strs.add(0, ""+value);
-		strs.add(1, unit.getAttrIdStr());
+		strs.add(1, "unit code " + unit.getAttrIdStr());
+
 		showRow(getShowRow(strs));
 
 		return true;
