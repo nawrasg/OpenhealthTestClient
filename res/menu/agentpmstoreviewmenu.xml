@@ -4,6 +4,6 @@
     android:icon="@drawable/update"
     android:title="@string/update_pmstore" />
   <item android:id="@+id/MENU_DISCONNECT"
-    android:icon="@drawable/release"
+    android:icon="@drawable/disconnect"
     android:title="@string/disconnect" />
 </menu>
