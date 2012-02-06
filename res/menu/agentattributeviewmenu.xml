@@ -6,6 +6,9 @@
   <item android:id="@+id/MENU_SETTIME"
     android:icon="@drawable/update"
     android:title="@string/setTime" />
+  <item android:id="@+id/MENU_CONNECT"
+    android:icon="@drawable/connect"
+    android:title="@string/connect" />
   <item android:id="@+id/MENU_DISCONNECT"
     android:icon="@drawable/disconnect"
     android:title="@string/disconnect" />

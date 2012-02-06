@@ -3,6 +3,9 @@
   <item android:id="@+id/MENU_PMSTORE"
     android:icon="@drawable/update"
     android:title="@string/update_pmstore" />
+  <item android:id="@+id/MENU_CONNECT"
+    android:icon="@drawable/connect"
+    android:title="@string/connect" />
   <item android:id="@+id/MENU_DISCONNECT"
     android:icon="@drawable/disconnect"
     android:title="@string/disconnect" />

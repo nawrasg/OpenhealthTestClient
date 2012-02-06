@@ -328,10 +328,19 @@ public class AgentMeasureView extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
+		IAgentService agentService = (IAgentService)
+			GlobalStorage.getInstance().get(IAgentService.class.toString());
 		switch (item.getItemId()) {
+			case R.id.MENU_CONNECT:
+				if (agentService != null) {
+					try {
+						agentService.connect(agent);
+					} catch (RemoteException e) {
+						show("Can't connect to the remote Service");
+					}
+				}
+				break;
 			case R.id.MENU_DISCONNECT:
-				IAgentService agentService = (IAgentService)
-					GlobalStorage.getInstance().get(IAgentService.class.toString());
 				if (agentService != null) {
 					try {
 						IError error = new IError();
