@@ -34,6 +34,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -57,6 +58,8 @@ public class ManagerTestClient extends ListActivity {
 	private static String serviceName = new String("es.libresoft.openhealth.android.OPENHEALTH_SERVICE");
 	private IManagerService managerService = null;
 	private Vector<IAgent> agents = new Vector<IAgent>();
+
+	private int textSize = 20;
 
 	private Handler handler = new Handler();
 
@@ -107,6 +110,9 @@ public class ManagerTestClient extends ListActivity {
 
 			tv.setOnClickListener(ocl);
 			tv.setText(agent.getTransportDesc());
+			tv.setTextSize(textSize);
+			tv.setTextColor(Color.BLACK);
+			tv.setPadding(0, 30, 0, 30);
 			return tv;
 		}
 	};
