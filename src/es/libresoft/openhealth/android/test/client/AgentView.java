@@ -87,7 +87,7 @@ public class AgentView extends TabActivity {
 			GlobalStorage.getInstance().get(IManagerService.class.toString());
 
 		if (managerService == null) {
-			Log.e("AgentAttributeView", "ManagerService is null, cant get manager callbacks");
+			Log.e("AgentView", "ManagerService is null, cant get manager callbacks");
 			return;
 		}
 		try {
@@ -103,7 +103,7 @@ public class AgentView extends TabActivity {
 		GlobalStorage.getInstance().get(IManagerService.class.toString());
 
 		if (managerService == null) {
-			Log.e("AgentAttributeView", "ManagerService is null, cant unregister manager callbacks");
+			Log.e("AgentView", "ManagerService is null, cant unregister manager callbacks");
 			return;
 		}
 		try {
