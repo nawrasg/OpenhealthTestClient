@@ -78,7 +78,7 @@ public class IDateMeasure extends IMeasure implements Parcelable{
 
 
 	public String toString(){
-		SimpleDateFormat sdf =  new SimpleDateFormat("yy/MM/dd HH:mm:ss:SS");
+		SimpleDateFormat sdf =  new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS");
 		return sdf.format(timestamp);
 	}
 }
